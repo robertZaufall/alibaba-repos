@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  var p = location.pathname;
+  if (p.charAt(p.length - 1) !== '/') p += '/';
+  document.write('<base href="' + p + '">');
+</script>
+<title>Alibaba GitHub Repository Atlas</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07101a;
+    --surface: #0e1724;
+    --surface2: #121f30;
+    --surface3: #18283b;
+    --border: #26384d;
+    --text: #eef6ff;
+    --text-muted: #9db0c5;
+    --alibaba: #ff6a00;
+    --blue: #0866ff;
+    --cyan: #50e6ff;
+    --green: #7fba00;
+    --orange: #f25022;
+    --red: #f25022;
+    --pink: #e3008c;
+    --purple: #8661c5;
+    --yellow: #ffb900;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 85% -10%, rgba(8, 102, 255, 0.2), transparent 28rem),
+      radial-gradient(circle at 8% 4%, rgba(127, 186, 0, 0.12), transparent 26rem),
+      linear-gradient(180deg, #081827 0%, var(--bg) 42rem);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    padding: 40px 24px 52px;
+  }
+
+  a { color: inherit; }
+
+  .header,
+  .search-panel,
+  .repo-section,
+  .footer {
+    max-width: 1480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-header {
+    margin-bottom: 24px;
+  }
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.6px;
+  }
+
+  .logo-box {
+    width: 38px;
+    height: 38px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0866ff, #8b5cf6);
+    color: #ffffff;
+    font-weight: 800;
+    box-shadow: 0 0 24px rgba(8, 102, 255, 0.28);
+  }
+
+  .page-header p {
+    max-width: 920px;
+    margin: 10px 0 0;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  .metric-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .metric-card {
+    min-width: 148px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(17, 22, 26, 0.8);
+  }
+
+  .metric-card strong {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  .metric-card span {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .jump-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-top: 18px;
+    align-items: flex-start;
+  }
+
+  .jump-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(17, 22, 26, 0.48);
+  }
+
+  .jump-group-label {
+    padding: 0 4px 0 2px;
+    color: var(--text-muted);
+    font: 700 10px 'JetBrains Mono', monospace;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+  }
+
+  .jump-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 10px;
+    background: rgba(17, 22, 26, 0.72);
+    color: var(--text);
+    text-decoration: none;
+    font: 700 11px 'JetBrains Mono', monospace;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+
+  .jump-group-clusters a {
+    border-color: rgba(8, 102, 255, 0.34);
+    background: rgba(8, 102, 255, 0.07);
+  }
+
+  .jump-group-other {
+    border-color: rgba(80, 230, 255, 0.22);
+    background: rgba(80, 230, 255, 0.045);
+  }
+
+  .jump-group-other a {
+    border-color: rgba(80, 230, 255, 0.36);
+    background: rgba(80, 230, 255, 0.08);
+  }
+
+  .jump-nav a:hover {
+    border-color: var(--alibaba);
+    color: var(--alibaba);
+    background: rgba(8, 102, 255, 0.1);
+  }
+
+  .jump-group-other a:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: rgba(80, 230, 255, 0.12);
+  }
+
+  .jump-nav span {
+    color: var(--text-muted);
+    font-size: 10px;
+  }
+
+  .search-panel {
+    display: grid;
+    grid-template-columns: auto minmax(240px, 1fr) auto auto auto auto;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background:
+      radial-gradient(circle at top right, rgba(8, 102, 255, 0.14), transparent 24rem),
+      linear-gradient(180deg, rgba(23, 30, 35, 0.98), rgba(17, 22, 26, 0.98));
+  }
+
+  .search-label,
+  .sort-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(8, 11, 13, 0.95);
+    color: var(--text);
+    outline: none;
+    padding: 12px 14px;
+    font: 500 14px 'DM Sans', system-ui, sans-serif;
+  }
+
+  .search-input:focus {
+    border-color: rgba(8, 102, 255, 0.82);
+    box-shadow: 0 0 0 3px rgba(8, 102, 255, 0.14);
+  }
+
+  .button {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(8, 11, 13, 0.95);
+    color: var(--text);
+    padding: 12px 13px;
+    font: 700 12px 'JetBrains Mono', monospace;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .button:hover,
+  .button.active {
+    border-color: var(--alibaba);
+    color: var(--alibaba);
+  }
+
+  .button:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .repo-section {
+    margin-top: 34px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: end;
+    margin-bottom: 14px;
+  }
+
+  .section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+  }
+
+  .section-header p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .section-mark {
+    width: 10px;
+    height: 20px;
+    border-radius: 2px;
+    background: var(--alibaba);
+    display: inline-block;
+  }
+
+  .section-mark-blue { background: var(--blue); }
+  .section-mark-cyan { background: var(--cyan); }
+  .section-mark-orange { background: var(--orange); }
+  .section-mark-pink { background: var(--pink); }
+  .section-mark-purple { background: var(--purple); }
+  .section-mark-green { background: var(--green); }
+  .section-mark-red { background: var(--red); }
+
+  .count-pill,
+  .cluster-pill {
+    display: inline-block;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 4px 8px;
+    color: var(--text-muted);
+    background: rgba(8, 11, 13, 0.45);
+    font: 600 11px 'JetBrains Mono', monospace;
+  }
+
+  .count-pill {
+    white-space: nowrap;
+  }
+
+  .cluster-pill {
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .cluster-link {
+    text-decoration: none;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .cluster-link:hover {
+    color: var(--alibaba);
+    border-color: var(--alibaba);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    scrollbar-color: #33516d #08111d;
+    scrollbar-width: thin;
+  }
+
+  table {
+    width: 100%;
+    min-width: 1120px;
+    border-collapse: collapse;
+    font-size: 13px;
+    table-layout: fixed;
+  }
+
+  .traction-section table {
+    min-width: 1220px;
+  }
+
+  .col-repository { width: 22%; }
+  .col-language { width: 10%; }
+  .col-description { width: 48%; }
+  .col-github { width: 20%; }
+  .col-traction-repository { width: 17%; }
+  .col-traction-description { width: 48%; }
+  .col-traction-cluster { width: 12%; }
+  .col-traction-language { width: 8%; }
+  .col-traction-github { width: 15%; }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 13px 14px;
+    text-align: left;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    font: 700 11px 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+  }
+
+  td {
+    padding: 13px 14px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(8, 102, 255, 0.045); }
+
+  .repo-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: 700 14px 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .repo-name a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .repo-name a:hover,
+  .repo-slug:hover {
+    color: var(--alibaba);
+    text-decoration: underline;
+  }
+
+  .repo-slug {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font: 500 11px 'JetBrains Mono', monospace;
+  }
+
+  .avatar {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: var(--surface3);
+  }
+
+  .tag,
+  .badge {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font: 700 11px 'JetBrains Mono', monospace;
+    background: rgba(149, 163, 154, 0.14);
+    color: var(--text-muted);
+  }
+
+  .tag-py { background: rgba(127, 186, 0, 0.14); color: var(--green); }
+  .tag-csharp { background: rgba(134, 97, 197, 0.18); color: var(--purple); }
+  .tag-c, .tag-cpp, .tag-cuda { background: rgba(69, 168, 255, 0.13); color: var(--blue); }
+  .tag-ts, .tag-js { background: rgba(250, 204, 21, 0.13); color: var(--yellow); }
+  .tag-go { background: rgba(80, 230, 255, 0.13); color: var(--cyan); }
+  .tag-shell { background: rgba(244, 114, 182, 0.13); color: var(--pink); }
+
+  .topic-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 7px;
+  }
+
+  .badge {
+    font-size: 10px;
+    color: #c0d1e4;
+  }
+
+  .keyword-button {
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .keyword-button:hover,
+  .keyword-button:focus-visible {
+    color: var(--alibaba);
+    background: rgba(8, 102, 255, 0.16);
+    outline: none;
+  }
+
+  .description-cell {
+    color: var(--text);
+    max-width: 54rem;
+  }
+
+  .github-cell {
+    min-width: 210px;
+  }
+
+  .gh-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 10px;
+    align-items: center;
+  }
+
+  .star-count,
+  .fork-count,
+  .commit-count,
+  .metric-sm {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .star-count {
+    color: var(--yellow);
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  .fork-count,
+  .commit-count,
+  .metric-sm {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .last-updated {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .activity-block {
+    margin-top: 8px;
+  }
+
+  .activity-bar {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(149, 163, 154, 0.16);
+    overflow: hidden;
+  }
+
+  .activity-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ff6a00, #ff9a3d, #6f7bf7);
+  }
+
+  .activity-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 5px;
+    color: var(--text-muted);
+    font: 600 10px 'JetBrains Mono', monospace;
+  }
+
+  .number-cell,
+  .rank-cell,
+  .date-cell {
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .number-cell {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .score-cell {
+    color: var(--alibaba);
+  }
+
+  .date-cell {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .footer {
+    margin-top: 30px;
+    color: var(--text-muted);
+    font: 500 11px 'JetBrains Mono', monospace;
+    line-height: 1.7;
+  }
+
+  .footer a { color: var(--alibaba); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    body { padding: 26px 14px 40px; }
+    .page-title { font-size: 24px; }
+    .search-panel { grid-template-columns: 1fr; }
+    .button, .search-label, .sort-label { width: 100%; }
+    .section-header { display: block; }
+    .count-pill { margin-top: 10px; }
+  }
+</style>
+</head>
+<body>
+  <header class="header page-header">
+    <h1 class="page-title"><span class="logo-box">A</span>Alibaba GitHub Repository Atlas</h1>
+    <p>Searchable snapshot of public repositories from Alibaba's <a href="https://github.com/orgs/alibaba/repositories" target="_blank" rel="noreferrer">alibaba organization</a>. Included repositories have more than 200 stars and were pushed within the last three months, since 2026-04-30.</p>
+    <div class="metric-strip" aria-label="Catalog summary">
+      <div class="metric-card"><strong>56</strong><span>qualified repos</span></div>
+      <div class="metric-card"><strong>401k</strong><span>combined stars</span></div>
+      <div class="metric-card"><strong>1.9k</strong><span>commits in 30d</span></div>
+      <div class="metric-card"><strong>7</strong><span>technology clusters</span></div>
+    </div>
+    <nav class="jump-nav" aria-label="Section links">
+      <div class="jump-group jump-group-clusters"><span class="jump-group-label">Clusters</span><a href="#section-traction">Fresh Traction</a>
+<a href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a>
+<a href="#cluster-data-databases-analytics">Data, Databases &amp; Analytics</a>
+<a href="#cluster-cloud-microservices-middleware">Cloud, Microservices &amp; Middleware</a>
+<a href="#cluster-languages-libraries-tools">Languages, Libraries &amp; Developer Tools</a>
+<a href="#cluster-web-mobile-ui">Web, Mobile &amp; User Interfaces</a>
+<a href="#cluster-systems-networking-observability">Systems, Networking &amp; Observability</a>
+<a href="#cluster-research-vision-media">Research, Vision &amp; Media</a></div>
+    </nav>
+  </header>
+
+  <div class="search-panel" role="search">
+    <div class="search-label">Search</div>
+    <input id="global-table-search" class="search-input" type="search" autocomplete="off" spellcheck="false" placeholder="repo, topic, language, description">
+    <button id="global-search-clear" class="button" type="button" disabled>Clear</button>
+    <div class="sort-label">Sort by</div>
+    <button id="sort-stars" class="button" type="button">Stars</button>
+    <button id="sort-fresh" class="button active" type="button">Freshness</button>
+  </div>
+
+
+<section class="repo-section traction-section" id="section-traction" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-blue"></span>Established Repos With Fresh Traction</h2>
+      <p>Ranked by recent commits, freshness, stars, and forks so active projects with broad audiences rise first.</p>
+    </div>
+    <span class="count-pill">Top 25</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-traction-repository">
+        <col class="col-traction-language">
+        <col class="col-traction-description">
+        <col class="col-traction-cluster">
+        <col class="col-traction-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>Cluster</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="297" data-pushed="1785372986" data-name="anolisa" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/anolisa" target="_blank" rel="noreferrer">anolisa</a></div><a class="repo-slug" href="https://github.com/alibaba/anolisa" target="_blank" rel="noreferrer">alibaba/anolisa</a></td>
+  <td><span class="tag tag-rust">Rust</span></td>
+  <td class="description-cell">ANOLISA(Agentic Nexus Operating Layer &amp; Interface System Architecture)<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic" title="Filter by agentic">agentic</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic-os" title="Filter by agentic-os">agentic-os</button><button class="badge keyword-button" type="button" data-filter-keyword="linux" title="Filter by linux">linux</button><button class="badge keyword-button" type="button" data-filter-keyword="os" title="Filter by os">os</button><button class="badge keyword-button" type="button" data-filter-keyword="skill" title="Filter by skill">skill</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 297</span>
+      <span class="fork-count">⑂ 78</span>
+      <span class="commit-count">⟳ 2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 30, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 405">
+      <div class="activity-bar"><span style="width: 100%"></span></div>
+      <div class="activity-meta">
+        <span>840 commits / 30d</span>
+        <span>score 405</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="16002" data-pushed="1785357352" data-name="open-code-review" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/open-code-review" target="_blank" rel="noreferrer">open-code-review</a></div><a class="repo-slug" href="https://github.com/alibaba/open-code-review" target="_blank" rel="noreferrer">alibaba/open-code-review</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">Open-source &amp; free — Battle-tested at Alibaba&#x27;s scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in fine-tuned ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI &amp; Anthropic compatible.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="Database" title="Filter by Database">Database</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="agent-skills" title="Filter by agent-skills">agent-skills</button><button class="badge keyword-button" type="button" data-filter-keyword="code-review" title="Filter by code-review">code-review</button><button class="badge keyword-button" type="button" data-filter-keyword="code-review-assistant" title="Filter by code-review-assistant">code-review-assistant</button><button class="badge keyword-button" type="button" data-filter-keyword="harness" title="Filter by harness">harness</button><button class="badge keyword-button" type="button" data-filter-keyword="repository-level-context" title="Filter by repository-level-context">repository-level-context</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 16k</span>
+      <span class="fork-count">⑂ 1.1k</span>
+      <span class="commit-count">⟳ 421</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 276">
+      <div class="activity-bar"><span style="width: 68%"></span></div>
+      <div class="activity-meta">
+        <span>183 commits / 30d</span>
+        <span>score 276</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="259" data-pushed="1785312758" data-name="skill-up" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/skill-up" target="_blank" rel="noreferrer">skill-up</a></div><a class="repo-slug" href="https://github.com/alibaba/skill-up" target="_blank" rel="noreferrer">alibaba/skill-up</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">An evaluation and evolution tool for Agent Skills.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="Benchmark" title="Filter by Benchmark">Benchmark</button><button class="badge keyword-button" type="button" data-filter-keyword="agent-skills" title="Filter by agent-skills">agent-skills</button><button class="badge keyword-button" type="button" data-filter-keyword="ai" title="Filter by ai">ai</button><button class="badge keyword-button" type="button" data-filter-keyword="ai-agents" title="Filter by ai-agents">ai-agents</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba" title="Filter by alibaba">alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="skills" title="Filter by skills">skills</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 259</span>
+      <span class="fork-count">⑂ 14</span>
+      <span class="commit-count">⟳ 269</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 184">
+      <div class="activity-bar"><span style="width: 45%"></span></div>
+      <div class="activity-meta">
+        <span>134 commits / 30d</span>
+        <span>score 184</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="33222" data-pushed="1785329543" data-name="nacos" data-cluster="cloud-microservices-middleware">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/nacos" target="_blank" rel="noreferrer">nacos</a></div><a class="repo-slug" href="https://github.com/alibaba/nacos" target="_blank" rel="noreferrer">alibaba/nacos</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">an easy-to-use dynamic service discovery, configuration and service management platform for building AI cloud native applications.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="Microservices" title="Filter by Microservices">Microservices</button><button class="badge keyword-button" type="button" data-filter-keyword="a2a-registry" title="Filter by a2a-registry">a2a-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="ai-registry" title="Filter by ai-registry">ai-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="configuration-management" title="Filter by configuration-management">configuration-management</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-configuration" title="Filter by distributed-configuration">distributed-configuration</button><button class="badge keyword-button" type="button" data-filter-keyword="dubbo" title="Filter by dubbo">dubbo</button><button class="badge keyword-button" type="button" data-filter-keyword="istio" title="Filter by istio">istio</button><button class="badge keyword-button" type="button" data-filter-keyword="kubernetes" title="Filter by kubernetes">kubernetes</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp" title="Filter by mcp">mcp</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp-management" title="Filter by mcp-management">mcp-management</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp-registry" title="Filter by mcp-registry">mcp-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="nacos" title="Filter by nacos">nacos</button><button class="badge keyword-button" type="button" data-filter-keyword="prompt" title="Filter by prompt">prompt</button><button class="badge keyword-button" type="button" data-filter-keyword="skills" title="Filter by skills">skills</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud" title="Filter by spring-cloud">spring-cloud</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-cloud-microservices-middleware">Cloud, Microservices &amp; Middleware</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 33.2k</span>
+      <span class="fork-count">⑂ 13.3k</span>
+      <span class="commit-count">⟳ 6.2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 181">
+      <div class="activity-bar"><span style="width: 45%"></span></div>
+      <div class="activity-meta">
+        <span>75 commits / 30d</span>
+        <span>score 181</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="13310" data-pushed="1785322901" data-name="tengine" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/tengine" target="_blank" rel="noreferrer">tengine</a></div><a class="repo-slug" href="https://github.com/alibaba/tengine" target="_blank" rel="noreferrer">alibaba/tengine</a></td>
+  <td><span class="tag tag-c">C</span></td>
+  <td class="description-cell">A distribution of Nginx with some advanced features<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="http3" title="Filter by http3">http3</button><button class="badge keyword-button" type="button" data-filter-keyword="ingress" title="Filter by ingress">ingress</button><button class="badge keyword-button" type="button" data-filter-keyword="nginx" title="Filter by nginx">nginx</button><button class="badge keyword-button" type="button" data-filter-keyword="quic" title="Filter by quic">quic</button><button class="badge keyword-button" type="button" data-filter-keyword="tengine" title="Filter by tengine">tengine</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-systems-networking-observability">Systems, Networking &amp; Observability</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 13.3k</span>
+      <span class="fork-count">⑂ 2.5k</span>
+      <span class="commit-count">⟳ 1.9k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 149">
+      <div class="activity-bar"><span style="width: 37%"></span></div>
+      <div class="activity-meta">
+        <span>55 commits / 30d</span>
+        <span>score 149</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="1289" data-pushed="1785372508" data-name="rtp-llm" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/rtp-llm" target="_blank" rel="noreferrer">rtp-llm</a></div><a class="repo-slug" href="https://github.com/alibaba/rtp-llm" target="_blank" rel="noreferrer">alibaba/rtp-llm</a></td>
+  <td><span class="tag tag-cuda">Cuda</span></td>
+  <td class="description-cell">RTP-LLM: Alibaba&#x27;s high-performance LLM inference engine for diverse applications.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="gpt" title="Filter by gpt">gpt</button><button class="badge keyword-button" type="button" data-filter-keyword="inference" title="Filter by inference">inference</button><button class="badge keyword-button" type="button" data-filter-keyword="llama" title="Filter by llama">llama</button><button class="badge keyword-button" type="button" data-filter-keyword="llm-serving" title="Filter by llm-serving">llm-serving</button><button class="badge keyword-button" type="button" data-filter-keyword="llmops" title="Filter by llmops">llmops</button><button class="badge keyword-button" type="button" data-filter-keyword="model-serving" title="Filter by model-serving">model-serving</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.3k</span>
+      <span class="fork-count">⑂ 248</span>
+      <span class="commit-count">⟳ 4.7k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 30, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 148">
+      <div class="activity-bar"><span style="width: 37%"></span></div>
+      <div class="activity-meta">
+        <span>78 commits / 30d</span>
+        <span>score 148</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="28144" data-pushed="1785179266" data-name="page-agent" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/page-agent" target="_blank" rel="noreferrer">page-agent</a></div><a class="repo-slug" href="https://github.com/alibaba/page-agent" target="_blank" rel="noreferrer">alibaba/page-agent</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">JavaScript in-page GUI agent. Control web interfaces with natural language.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="Web" title="Filter by Web">Web</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="ai" title="Filter by ai">ai</button><button class="badge keyword-button" type="button" data-filter-keyword="ai-agents" title="Filter by ai-agents">ai-agents</button><button class="badge keyword-button" type="button" data-filter-keyword="browser-automation" title="Filter by browser-automation">browser-automation</button><button class="badge keyword-button" type="button" data-filter-keyword="javascript" title="Filter by javascript">javascript</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp" title="Filter by mcp">mcp</button><button class="badge keyword-button" type="button" data-filter-keyword="typescript" title="Filter by typescript">typescript</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 28.1k</span>
+      <span class="fork-count">⑂ 2.5k</span>
+      <span class="commit-count">⟳ 1.1k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 27, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 146">
+      <div class="activity-bar"><span style="width: 36%"></span></div>
+      <div class="activity-meta">
+        <span>53 commits / 30d</span>
+        <span>score 146</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="15759" data-pushed="1785329886" data-name="mnn" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/MNN" target="_blank" rel="noreferrer">MNN</a></div><a class="repo-slug" href="https://github.com/alibaba/MNN" target="_blank" rel="noreferrer">alibaba/MNN</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">MNN: A blazing-fast, lightweight inference engine battle-tested by Alibaba, powering high-performance on-device LLMs and Edge AI.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="arm" title="Filter by arm">arm</button><button class="badge keyword-button" type="button" data-filter-keyword="convolution" title="Filter by convolution">convolution</button><button class="badge keyword-button" type="button" data-filter-keyword="deep-learning" title="Filter by deep-learning">deep-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="embedded-devices" title="Filter by embedded-devices">embedded-devices</button><button class="badge keyword-button" type="button" data-filter-keyword="llm" title="Filter by llm">llm</button><button class="badge keyword-button" type="button" data-filter-keyword="machine-learning" title="Filter by machine-learning">machine-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="ml" title="Filter by ml">ml</button><button class="badge keyword-button" type="button" data-filter-keyword="mnn" title="Filter by mnn">mnn</button><button class="badge keyword-button" type="button" data-filter-keyword="transformer" title="Filter by transformer">transformer</button><button class="badge keyword-button" type="button" data-filter-keyword="vulkan" title="Filter by vulkan">vulkan</button><button class="badge keyword-button" type="button" data-filter-keyword="winograd-algorithm" title="Filter by winograd-algorithm">winograd-algorithm</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 15.8k</span>
+      <span class="fork-count">⑂ 2.4k</span>
+      <span class="commit-count">⟳ 3k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 142">
+      <div class="activity-bar"><span style="width: 35%"></span></div>
+      <div class="activity-meta">
+        <span>47 commits / 30d</span>
+        <span>score 142</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="15315" data-pushed="1785324196" data-name="zvec" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/zvec" target="_blank" rel="noreferrer">zvec</a></div><a class="repo-slug" href="https://github.com/alibaba/zvec" target="_blank" rel="noreferrer">alibaba/zvec</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">A lightweight, lightning-fast, in-process vector database<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Database" title="Filter by Database">Database</button><button class="badge keyword-button" type="button" data-filter-keyword="agent-skills" title="Filter by agent-skills">agent-skills</button><button class="badge keyword-button" type="button" data-filter-keyword="db" title="Filter by db">db</button><button class="badge keyword-button" type="button" data-filter-keyword="embedded" title="Filter by embedded">embedded</button><button class="badge keyword-button" type="button" data-filter-keyword="faiss" title="Filter by faiss">faiss</button><button class="badge keyword-button" type="button" data-filter-keyword="hnsw" title="Filter by hnsw">hnsw</button><button class="badge keyword-button" type="button" data-filter-keyword="llm-memory" title="Filter by llm-memory">llm-memory</button><button class="badge keyword-button" type="button" data-filter-keyword="local" title="Filter by local">local</button><button class="badge keyword-button" type="button" data-filter-keyword="rag" title="Filter by rag">rag</button><button class="badge keyword-button" type="button" data-filter-keyword="search-engine" title="Filter by search-engine">search-engine</button><button class="badge keyword-button" type="button" data-filter-keyword="semantic-search" title="Filter by semantic-search">semantic-search</button><button class="badge keyword-button" type="button" data-filter-keyword="similarity-search" title="Filter by similarity-search">similarity-search</button><button class="badge keyword-button" type="button" data-filter-keyword="vector-database" title="Filter by vector-database">vector-database</button><button class="badge keyword-button" type="button" data-filter-keyword="vector-db" title="Filter by vector-db">vector-db</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 15.3k</span>
+      <span class="fork-count">⑂ 967</span>
+      <span class="commit-count">⟳ 332</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 139">
+      <div class="activity-bar"><span style="width: 34%"></span></div>
+      <div class="activity-meta">
+        <span>46 commits / 30d</span>
+        <span>score 139</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="10466" data-pushed="1785329540" data-name="spring-ai-alibaba" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/spring-ai-alibaba" target="_blank" rel="noreferrer">spring-ai-alibaba</a></div><a class="repo-slug" href="https://github.com/alibaba/spring-ai-alibaba" target="_blank" rel="noreferrer">alibaba/spring-ai-alibaba</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">Agentic AI Framework for Java Developers<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic" title="Filter by agentic">agentic</button><button class="badge keyword-button" type="button" data-filter-keyword="artificial-intelligence" title="Filter by artificial-intelligence">artificial-intelligence</button><button class="badge keyword-button" type="button" data-filter-keyword="context-engineering" title="Filter by context-engineering">context-engineering</button><button class="badge keyword-button" type="button" data-filter-keyword="graph" title="Filter by graph">graph</button><button class="badge keyword-button" type="button" data-filter-keyword="multi-agent" title="Filter by multi-agent">multi-agent</button><button class="badge keyword-button" type="button" data-filter-keyword="reactagent" title="Filter by reactagent">reactagent</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-ai" title="Filter by spring-ai">spring-ai</button><button class="badge keyword-button" type="button" data-filter-keyword="workflow" title="Filter by workflow">workflow</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 10.5k</span>
+      <span class="fork-count">⑂ 2.3k</span>
+      <span class="commit-count">⟳ 3.2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 124">
+      <div class="activity-bar"><span style="width: 31%"></span></div>
+      <div class="activity-meta">
+        <span>32 commits / 30d</span>
+        <span>score 124</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="470" data-pushed="1785291895" data-name="rock" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/ROCK" target="_blank" rel="noreferrer">ROCK</a></div><a class="repo-slug" href="https://github.com/alibaba/ROCK" target="_blank" rel="noreferrer">alibaba/ROCK</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">A construction kit for reinforcement learning environment management.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Reinforcement Learning" title="Filter by Reinforcement Learning">Reinforcement Learning</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 470</span>
+      <span class="fork-count">⑂ 78</span>
+      <span class="commit-count">⟳ 649</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 119">
+      <div class="activity-bar"><span style="width: 29%"></span></div>
+      <div class="activity-meta">
+        <span>60 commits / 30d</span>
+        <span>score 119</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="29143" data-pushed="1785201018" data-name="spring-cloud-alibaba" data-cluster="cloud-microservices-middleware">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/spring-cloud-alibaba" target="_blank" rel="noreferrer">spring-cloud-alibaba</a></div><a class="repo-slug" href="https://github.com/alibaba/spring-cloud-alibaba" target="_blank" rel="noreferrer">alibaba/spring-cloud-alibaba</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">Spring Cloud Alibaba provides a one-stop solution for application development for the distributed solutions of Alibaba middleware.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="Microservices" title="Filter by Microservices">Microservices</button><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba" title="Filter by alibaba">alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba-middleware" title="Filter by alibaba-middleware">alibaba-middleware</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba-oss" title="Filter by alibaba-oss">alibaba-oss</button><button class="badge keyword-button" type="button" data-filter-keyword="aliyun" title="Filter by aliyun">aliyun</button><button class="badge keyword-button" type="button" data-filter-keyword="circuit-breaker" title="Filter by circuit-breaker">circuit-breaker</button><button class="badge keyword-button" type="button" data-filter-keyword="cloud-native" title="Filter by cloud-native">cloud-native</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-configuration" title="Filter by distributed-configuration">distributed-configuration</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-messaging" title="Filter by distributed-messaging">distributed-messaging</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-transaction" title="Filter by distributed-transaction">distributed-transaction</button><button class="badge keyword-button" type="button" data-filter-keyword="dubbo" title="Filter by dubbo">dubbo</button><button class="badge keyword-button" type="button" data-filter-keyword="nacos" title="Filter by nacos">nacos</button><button class="badge keyword-button" type="button" data-filter-keyword="rocketmq" title="Filter by rocketmq">rocketmq</button><button class="badge keyword-button" type="button" data-filter-keyword="service-discovery" title="Filter by service-discovery">service-discovery</button><button class="badge keyword-button" type="button" data-filter-keyword="service-registry" title="Filter by service-registry">service-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="spring" title="Filter by spring">spring</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud" title="Filter by spring-cloud">spring-cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud-alibaba" title="Filter by spring-cloud-alibaba">spring-cloud-alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud-core" title="Filter by spring-cloud-core">spring-cloud-core</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-cloud-microservices-middleware">Cloud, Microservices &amp; Middleware</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 29.1k</span>
+      <span class="fork-count">⑂ 8.5k</span>
+      <span class="commit-count">⟳ 2.7k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 28, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 105">
+      <div class="activity-bar"><span style="width: 26%"></span></div>
+      <div class="activity-meta">
+        <span>5 commits / 30d</span>
+        <span>score 105</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="37457" data-pushed="1784886269" data-name="arthas" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/arthas" target="_blank" rel="noreferrer">arthas</a></div><a class="repo-slug" href="https://github.com/alibaba/arthas" target="_blank" rel="noreferrer">alibaba/arthas</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">Alibaba Java Diagnostic Tool Arthas/Alibaba Java诊断利器Arthas<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="Observability" title="Filter by Observability">Observability</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba" title="Filter by alibaba">alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="arthas" title="Filter by arthas">arthas</button><button class="badge keyword-button" type="button" data-filter-keyword="classloader" title="Filter by classloader">classloader</button><button class="badge keyword-button" type="button" data-filter-keyword="diagnosis" title="Filter by diagnosis">diagnosis</button><button class="badge keyword-button" type="button" data-filter-keyword="jvm" title="Filter by jvm">jvm</button><button class="badge keyword-button" type="button" data-filter-keyword="trace" title="Filter by trace">trace</button><button class="badge keyword-button" type="button" data-filter-keyword="trouble-shooting" title="Filter by trouble-shooting">trouble-shooting</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-languages-libraries-tools">Languages, Libraries &amp; Developer Tools</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 37.5k</span>
+      <span class="fork-count">⑂ 7.6k</span>
+      <span class="commit-count">⟳ 2.2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 24, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 98">
+      <div class="activity-bar"><span style="width: 24%"></span></div>
+      <div class="activity-meta">
+        <span>10 commits / 30d</span>
+        <span>score 98</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="352" data-pushed="1784802582" data-name="recis" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/RecIS" target="_blank" rel="noreferrer">RecIS</a></div><a class="repo-slug" href="https://github.com/alibaba/RecIS" target="_blank" rel="noreferrer">alibaba/RecIS</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">A unified architecture deep learning framework designed specifically for ultra-large-scale sparse models.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="AI" title="Filter by AI">AI</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 352</span>
+      <span class="fork-count">⑂ 25</span>
+      <span class="commit-count">⟳ 142</span>
+    </div>
+    <span class="last-updated">⏱ Jul 23, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 95">
+      <div class="activity-bar"><span style="width: 24%"></span></div>
+      <div class="activity-meta">
+        <span>52 commits / 30d</span>
+        <span>score 95</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="2161" data-pushed="1785238903" data-name="yalantinglibs" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/yalantinglibs" target="_blank" rel="noreferrer">yalantinglibs</a></div><a class="repo-slug" href="https://github.com/alibaba/yalantinglibs" target="_blank" rel="noreferrer">alibaba/yalantinglibs</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">A collection of modern C++ libraries, include coro_http, coro_rpc, compile-time reflection, struct_pack, struct_json, struct_xml, struct_pb, easylog, async_simple etc.<div class="topic-row"></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-languages-libraries-tools">Languages, Libraries &amp; Developer Tools</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.2k</span>
+      <span class="fork-count">⑂ 328</span>
+      <span class="commit-count">⟳ 892</span>
+    </div>
+    <span class="last-updated">⏱ Jul 28, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 93">
+      <div class="activity-bar"><span style="width: 23%"></span></div>
+      <div class="activity-meta">
+        <span>21 commits / 30d</span>
+        <span>score 93</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="1219" data-pushed="1785338562" data-name="photonlibos" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/PhotonLibOS" target="_blank" rel="noreferrer">PhotonLibOS</a></div><a class="repo-slug" href="https://github.com/alibaba/PhotonLibOS" target="_blank" rel="noreferrer">alibaba/PhotonLibOS</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">Probably the fastest coroutine lib in the world!<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="async-io" title="Filter by async-io">async-io</button><button class="badge keyword-button" type="button" data-filter-keyword="coroutine" title="Filter by coroutine">coroutine</button><button class="badge keyword-button" type="button" data-filter-keyword="cpp" title="Filter by cpp">cpp</button><button class="badge keyword-button" type="button" data-filter-keyword="fs-library" title="Filter by fs-library">fs-library</button><button class="badge keyword-button" type="button" data-filter-keyword="http" title="Filter by http">http</button><button class="badge keyword-button" type="button" data-filter-keyword="iouring" title="Filter by iouring">iouring</button><button class="badge keyword-button" type="button" data-filter-keyword="libos" title="Filter by libos">libos</button><button class="badge keyword-button" type="button" data-filter-keyword="net-library" title="Filter by net-library">net-library</button><button class="badge keyword-button" type="button" data-filter-keyword="rpc" title="Filter by rpc">rpc</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-systems-networking-observability">Systems, Networking &amp; Observability</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.2k</span>
+      <span class="fork-count">⑂ 178</span>
+      <span class="commit-count">⟳ 843</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 93">
+      <div class="activity-bar"><span style="width: 23%"></span></div>
+      <div class="activity-meta">
+        <span>24 commits / 30d</span>
+        <span>score 93</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="4361" data-pushed="1785324742" data-name="fastjson2" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/fastjson2" target="_blank" rel="noreferrer">fastjson2</a></div><a class="repo-slug" href="https://github.com/alibaba/fastjson2" target="_blank" rel="noreferrer">alibaba/fastjson2</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">🚄 FASTJSON2 is a Java JSON  library with excellent performance.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="android" title="Filter by android">android</button><button class="badge keyword-button" type="button" data-filter-keyword="big-data" title="Filter by big-data">big-data</button><button class="badge keyword-button" type="button" data-filter-keyword="deserialization" title="Filter by deserialization">deserialization</button><button class="badge keyword-button" type="button" data-filter-keyword="fastjson" title="Filter by fastjson">fastjson</button><button class="badge keyword-button" type="button" data-filter-keyword="fastjson2" title="Filter by fastjson2">fastjson2</button><button class="badge keyword-button" type="button" data-filter-keyword="graal" title="Filter by graal">graal</button><button class="badge keyword-button" type="button" data-filter-keyword="graalvm-native-image" title="Filter by graalvm-native-image">graalvm-native-image</button><button class="badge keyword-button" type="button" data-filter-keyword="high-performance" title="Filter by high-performance">high-performance</button><button class="badge keyword-button" type="button" data-filter-keyword="java-json" title="Filter by java-json">java-json</button><button class="badge keyword-button" type="button" data-filter-keyword="json" title="Filter by json">json</button><button class="badge keyword-button" type="button" data-filter-keyword="json-deserialization" title="Filter by json-deserialization">json-deserialization</button><button class="badge keyword-button" type="button" data-filter-keyword="json-parser" title="Filter by json-parser">json-parser</button><button class="badge keyword-button" type="button" data-filter-keyword="json-path" title="Filter by json-path">json-path</button><button class="badge keyword-button" type="button" data-filter-keyword="json-serialization" title="Filter by json-serialization">json-serialization</button><button class="badge keyword-button" type="button" data-filter-keyword="json-serializer" title="Filter by json-serializer">json-serializer</button><button class="badge keyword-button" type="button" data-filter-keyword="jsonb" title="Filter by jsonb">jsonb</button><button class="badge keyword-button" type="button" data-filter-keyword="serialization" title="Filter by serialization">serialization</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-languages-libraries-tools">Languages, Libraries &amp; Developer Tools</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 4.4k</span>
+      <span class="fork-count">⑂ 581</span>
+      <span class="commit-count">⟳ 5k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 91">
+      <div class="activity-bar"><span style="width: 22%"></span></div>
+      <div class="activity-meta">
+        <span>9 commits / 30d</span>
+        <span>score 91</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="2173" data-pushed="1785140953" data-name="loongcollector" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/loongcollector" target="_blank" rel="noreferrer">loongcollector</a></div><a class="repo-slug" href="https://github.com/alibaba/loongcollector" target="_blank" rel="noreferrer">alibaba/loongcollector</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">Fast and Lightweight Observability Data Collector<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Observability" title="Filter by Observability">Observability</button><button class="badge keyword-button" type="button" data-filter-keyword="aliyun" title="Filter by aliyun">aliyun</button><button class="badge keyword-button" type="button" data-filter-keyword="apm" title="Filter by apm">apm</button><button class="badge keyword-button" type="button" data-filter-keyword="cloud-native" title="Filter by cloud-native">cloud-native</button><button class="badge keyword-button" type="button" data-filter-keyword="ebpf" title="Filter by ebpf">ebpf</button><button class="badge keyword-button" type="button" data-filter-keyword="kubernetes" title="Filter by kubernetes">kubernetes</button><button class="badge keyword-button" type="button" data-filter-keyword="log" title="Filter by log">log</button><button class="badge keyword-button" type="button" data-filter-keyword="sls" title="Filter by sls">sls</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-systems-networking-observability">Systems, Networking &amp; Observability</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.2k</span>
+      <span class="fork-count">⑂ 442</span>
+      <span class="commit-count">⟳ 1.4k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 27, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 85">
+      <div class="activity-bar"><span style="width: 21%"></span></div>
+      <div class="activity-meta">
+        <span>15 commits / 30d</span>
+        <span>score 85</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="219" data-pushed="1785333469" data-name="tair-kvcache" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/tair-kvcache" target="_blank" rel="noreferrer">tair-kvcache</a></div><a class="repo-slug" href="https://github.com/alibaba/tair-kvcache" target="_blank" rel="noreferrer">alibaba/tair-kvcache</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">Alibaba Cloud&#x27;s high-performance KVCache system for LLM inference, with components for global cache management, inference simulation(HiSim), and more.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="hisim" title="Filter by hisim">hisim</button><button class="badge keyword-button" type="button" data-filter-keyword="kv-cache" title="Filter by kv-cache">kv-cache</button><button class="badge keyword-button" type="button" data-filter-keyword="kvcache" title="Filter by kvcache">kvcache</button><button class="badge keyword-button" type="button" data-filter-keyword="simulator" title="Filter by simulator">simulator</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 219</span>
+      <span class="fork-count">⑂ 49</span>
+      <span class="commit-count">⟳ 206</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 82">
+      <div class="activity-bar"><span style="width: 20%"></span></div>
+      <div class="activity-meta">
+        <span>30 commits / 30d</span>
+        <span>score 82</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="3336" data-pushed="1785289242" data-name="roll" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/ROLL" target="_blank" rel="noreferrer">ROLL</a></div><a class="repo-slug" href="https://github.com/alibaba/ROLL" target="_blank" rel="noreferrer">alibaba/ROLL</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">An Efficient and User-Friendly Scaling Library for Reinforcement Learning with Large Language Models<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="Reinforcement Learning" title="Filter by Reinforcement Learning">Reinforcement Learning</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic" title="Filter by agentic">agentic</button><button class="badge keyword-button" type="button" data-filter-keyword="rlhf" title="Filter by rlhf">rlhf</button><button class="badge keyword-button" type="button" data-filter-keyword="rlvr" title="Filter by rlvr">rlvr</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 3.3k</span>
+      <span class="fork-count">⑂ 303</span>
+      <span class="commit-count">⟳ 495</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 82">
+      <div class="activity-bar"><span style="width: 20%"></span></div>
+      <div class="activity-meta">
+        <span>4 commits / 30d</span>
+        <span>score 82</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="421" data-pushed="1785309220" data-name="torcheasyrec" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/TorchEasyRec" target="_blank" rel="noreferrer">TorchEasyRec</a></div><a class="repo-slug" href="https://github.com/alibaba/TorchEasyRec" target="_blank" rel="noreferrer">alibaba/TorchEasyRec</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">An easy-to-use framework for large scale recommendation algorithms.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="deepfm" title="Filter by deepfm">deepfm</button><button class="badge keyword-button" type="button" data-filter-keyword="din" title="Filter by din">din</button><button class="badge keyword-button" type="button" data-filter-keyword="dlrm" title="Filter by dlrm">dlrm</button><button class="badge keyword-button" type="button" data-filter-keyword="dssm" title="Filter by dssm">dssm</button><button class="badge keyword-button" type="button" data-filter-keyword="hstu" title="Filter by hstu">hstu</button><button class="badge keyword-button" type="button" data-filter-keyword="mind" title="Filter by mind">mind</button><button class="badge keyword-button" type="button" data-filter-keyword="multi-task-learning" title="Filter by multi-task-learning">multi-task-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="recommendation-algorithms" title="Filter by recommendation-algorithms">recommendation-algorithms</button><button class="badge keyword-button" type="button" data-filter-keyword="recommender-system" title="Filter by recommender-system">recommender-system</button><button class="badge keyword-button" type="button" data-filter-keyword="tdm" title="Filter by tdm">tdm</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 421</span>
+      <span class="fork-count">⑂ 81</span>
+      <span class="commit-count">⟳ 495</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 81">
+      <div class="activity-bar"><span style="width: 20%"></span></div>
+      <div class="activity-meta">
+        <span>23 commits / 30d</span>
+        <span>score 81</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="1905" data-pushed="1785335849" data-name="xquic" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/xquic" target="_blank" rel="noreferrer">xquic</a></div><a class="repo-slug" href="https://github.com/alibaba/xquic" target="_blank" rel="noreferrer">alibaba/xquic</a></td>
+  <td><span class="tag tag-c">C</span></td>
+  <td class="description-cell">XQUIC Library released by Alibaba is a cross-platform implementation of QUIC and HTTP/3 protocol.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Networking" title="Filter by Networking">Networking</button><button class="badge keyword-button" type="button" data-filter-keyword="http3" title="Filter by http3">http3</button><button class="badge keyword-button" type="button" data-filter-keyword="ietf" title="Filter by ietf">ietf</button><button class="badge keyword-button" type="button" data-filter-keyword="protocol" title="Filter by protocol">protocol</button><button class="badge keyword-button" type="button" data-filter-keyword="quic" title="Filter by quic">quic</button><button class="badge keyword-button" type="button" data-filter-keyword="tls13" title="Filter by tls13">tls13</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-systems-networking-observability">Systems, Networking &amp; Observability</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.9k</span>
+      <span class="fork-count">⑂ 398</span>
+      <span class="commit-count">⟳ 266</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 80">
+      <div class="activity-bar"><span style="width: 20%"></span></div>
+      <div class="activity-meta">
+        <span>6 commits / 30d</span>
+        <span>score 80</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="1355" data-pushed="1784549472" data-name="react-intl-universal" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/react-intl-universal" target="_blank" rel="noreferrer">react-intl-universal</a></div><a class="repo-slug" href="https://github.com/alibaba/react-intl-universal" target="_blank" rel="noreferrer">alibaba/react-intl-universal</a></td>
+  <td><span class="tag tag-js">JavaScript</span></td>
+  <td class="description-cell">Internationalize React apps. Not only for Component but also for Vanilla JS.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Web" title="Filter by Web">Web</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-web-mobile-ui">Web, Mobile &amp; User Interfaces</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.4k</span>
+      <span class="fork-count">⑂ 158</span>
+      <span class="commit-count">⟳ 330</span>
+    </div>
+    <span class="last-updated">⏱ Jul 20, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 75">
+      <div class="activity-bar"><span style="width: 19%"></span></div>
+      <div class="activity-meta">
+        <span>27 commits / 30d</span>
+        <span>score 75</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="2595" data-pushed="1785371782" data-name="pipcook" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/pipcook" target="_blank" rel="noreferrer">pipcook</a></div><a class="repo-slug" href="https://github.com/alibaba/pipcook" target="_blank" rel="noreferrer">alibaba/pipcook</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">Machine learning platform for Web developers<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="AI" title="Filter by AI">AI</button><button class="badge keyword-button" type="button" data-filter-keyword="Web" title="Filter by Web">Web</button><button class="badge keyword-button" type="button" data-filter-keyword="js" title="Filter by js">js</button><button class="badge keyword-button" type="button" data-filter-keyword="machine-learning" title="Filter by machine-learning">machine-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="pipeline" title="Filter by pipeline">pipeline</button><button class="badge keyword-button" type="button" data-filter-keyword="tensorflow" title="Filter by tensorflow">tensorflow</button></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-ai-agents-ml">AI, Agents &amp; Machine Learning</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.6k</span>
+      <span class="fork-count">⑂ 212</span>
+      <span class="commit-count">⟳ 692</span>
+    </div>
+    <span class="last-updated">⏱ Jul 30, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 75">
+      <div class="activity-bar"><span style="width: 19%"></span></div>
+      <div class="activity-meta">
+        <span>0 commits / 30d</span>
+        <span>score 75</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr data-stars="946" data-pushed="1785309335" data-name="lumenx" data-cluster="research-vision-media">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/lumenx" target="_blank" rel="noreferrer">lumenx</a></div><a class="repo-slug" href="https://github.com/alibaba/lumenx" target="_blank" rel="noreferrer">alibaba/lumenx</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">LumenX Studio，AI 短漫剧一站式生产平台。它能够将小说文本转化为动态视频，打通了从剧本分析、角色定制、分镜绘制到视频合成的完整创作链路。<div class="topic-row"></div></td>
+  <td><a class="cluster-pill cluster-link" href="#cluster-research-vision-media">Research, Vision &amp; Media</a></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 946</span>
+      <span class="fork-count">⑂ 237</span>
+      <span class="commit-count">⟳ 391</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+    <div class="activity-block" aria-label="Recent activity score 73">
+      <div class="activity-bar"><span style="width: 18%"></span></div>
+      <div class="activity-meta">
+        <span>6 commits / 30d</span>
+        <span>score 73</span>
+      </div>
+    </div>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="repo-section" id="cluster-ai-agents-ml" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-blue"></span>AI, Agents &amp; Machine Learning</h2>
+      <p>Agent frameworks, language models, reinforcement learning, inference engines, vector search, and AI applications. Showing all qualifying repositories in this cluster by stars.</p>
+    </div>
+    <span class="count-pill">15 repos</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-repository">
+        <col class="col-language">
+        <col class="col-description">
+        <col class="col-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="28144" data-pushed="1785179266" data-name="page-agent" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/page-agent" target="_blank" rel="noreferrer">page-agent</a></div><a class="repo-slug" href="https://github.com/alibaba/page-agent" target="_blank" rel="noreferrer">alibaba/page-agent</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">JavaScript in-page GUI agent. Control web interfaces with natural language.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="Web" title="Filter by Web">Web</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="ai" title="Filter by ai">ai</button><button class="badge keyword-button" type="button" data-filter-keyword="ai-agents" title="Filter by ai-agents">ai-agents</button><button class="badge keyword-button" type="button" data-filter-keyword="browser-automation" title="Filter by browser-automation">browser-automation</button><button class="badge keyword-button" type="button" data-filter-keyword="javascript" title="Filter by javascript">javascript</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp" title="Filter by mcp">mcp</button><button class="badge keyword-button" type="button" data-filter-keyword="typescript" title="Filter by typescript">typescript</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 28.1k</span>
+      <span class="fork-count">⑂ 2.5k</span>
+      <span class="commit-count">⟳ 1.1k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 27, 2026</span>
+  </td>
+</tr>
+<tr data-stars="16002" data-pushed="1785357352" data-name="open-code-review" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/open-code-review" target="_blank" rel="noreferrer">open-code-review</a></div><a class="repo-slug" href="https://github.com/alibaba/open-code-review" target="_blank" rel="noreferrer">alibaba/open-code-review</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">Open-source &amp; free — Battle-tested at Alibaba&#x27;s scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in fine-tuned ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI &amp; Anthropic compatible.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="Database" title="Filter by Database">Database</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="agent-skills" title="Filter by agent-skills">agent-skills</button><button class="badge keyword-button" type="button" data-filter-keyword="code-review" title="Filter by code-review">code-review</button><button class="badge keyword-button" type="button" data-filter-keyword="code-review-assistant" title="Filter by code-review-assistant">code-review-assistant</button><button class="badge keyword-button" type="button" data-filter-keyword="harness" title="Filter by harness">harness</button><button class="badge keyword-button" type="button" data-filter-keyword="repository-level-context" title="Filter by repository-level-context">repository-level-context</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 16k</span>
+      <span class="fork-count">⑂ 1.1k</span>
+      <span class="commit-count">⟳ 421</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="15759" data-pushed="1785329886" data-name="mnn" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/MNN" target="_blank" rel="noreferrer">MNN</a></div><a class="repo-slug" href="https://github.com/alibaba/MNN" target="_blank" rel="noreferrer">alibaba/MNN</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">MNN: A blazing-fast, lightweight inference engine battle-tested by Alibaba, powering high-performance on-device LLMs and Edge AI.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="arm" title="Filter by arm">arm</button><button class="badge keyword-button" type="button" data-filter-keyword="convolution" title="Filter by convolution">convolution</button><button class="badge keyword-button" type="button" data-filter-keyword="deep-learning" title="Filter by deep-learning">deep-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="embedded-devices" title="Filter by embedded-devices">embedded-devices</button><button class="badge keyword-button" type="button" data-filter-keyword="llm" title="Filter by llm">llm</button><button class="badge keyword-button" type="button" data-filter-keyword="machine-learning" title="Filter by machine-learning">machine-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="ml" title="Filter by ml">ml</button><button class="badge keyword-button" type="button" data-filter-keyword="mnn" title="Filter by mnn">mnn</button><button class="badge keyword-button" type="button" data-filter-keyword="transformer" title="Filter by transformer">transformer</button><button class="badge keyword-button" type="button" data-filter-keyword="vulkan" title="Filter by vulkan">vulkan</button><button class="badge keyword-button" type="button" data-filter-keyword="winograd-algorithm" title="Filter by winograd-algorithm">winograd-algorithm</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 15.8k</span>
+      <span class="fork-count">⑂ 2.4k</span>
+      <span class="commit-count">⟳ 3k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="15315" data-pushed="1785324196" data-name="zvec" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/zvec" target="_blank" rel="noreferrer">zvec</a></div><a class="repo-slug" href="https://github.com/alibaba/zvec" target="_blank" rel="noreferrer">alibaba/zvec</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">A lightweight, lightning-fast, in-process vector database<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Database" title="Filter by Database">Database</button><button class="badge keyword-button" type="button" data-filter-keyword="agent-skills" title="Filter by agent-skills">agent-skills</button><button class="badge keyword-button" type="button" data-filter-keyword="db" title="Filter by db">db</button><button class="badge keyword-button" type="button" data-filter-keyword="embedded" title="Filter by embedded">embedded</button><button class="badge keyword-button" type="button" data-filter-keyword="faiss" title="Filter by faiss">faiss</button><button class="badge keyword-button" type="button" data-filter-keyword="hnsw" title="Filter by hnsw">hnsw</button><button class="badge keyword-button" type="button" data-filter-keyword="llm-memory" title="Filter by llm-memory">llm-memory</button><button class="badge keyword-button" type="button" data-filter-keyword="local" title="Filter by local">local</button><button class="badge keyword-button" type="button" data-filter-keyword="rag" title="Filter by rag">rag</button><button class="badge keyword-button" type="button" data-filter-keyword="search-engine" title="Filter by search-engine">search-engine</button><button class="badge keyword-button" type="button" data-filter-keyword="semantic-search" title="Filter by semantic-search">semantic-search</button><button class="badge keyword-button" type="button" data-filter-keyword="similarity-search" title="Filter by similarity-search">similarity-search</button><button class="badge keyword-button" type="button" data-filter-keyword="vector-database" title="Filter by vector-database">vector-database</button><button class="badge keyword-button" type="button" data-filter-keyword="vector-db" title="Filter by vector-db">vector-db</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 15.3k</span>
+      <span class="fork-count">⑂ 967</span>
+      <span class="commit-count">⟳ 332</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="10466" data-pushed="1785329540" data-name="spring-ai-alibaba" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/spring-ai-alibaba" target="_blank" rel="noreferrer">spring-ai-alibaba</a></div><a class="repo-slug" href="https://github.com/alibaba/spring-ai-alibaba" target="_blank" rel="noreferrer">alibaba/spring-ai-alibaba</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">Agentic AI Framework for Java Developers<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic" title="Filter by agentic">agentic</button><button class="badge keyword-button" type="button" data-filter-keyword="artificial-intelligence" title="Filter by artificial-intelligence">artificial-intelligence</button><button class="badge keyword-button" type="button" data-filter-keyword="context-engineering" title="Filter by context-engineering">context-engineering</button><button class="badge keyword-button" type="button" data-filter-keyword="graph" title="Filter by graph">graph</button><button class="badge keyword-button" type="button" data-filter-keyword="multi-agent" title="Filter by multi-agent">multi-agent</button><button class="badge keyword-button" type="button" data-filter-keyword="reactagent" title="Filter by reactagent">reactagent</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-ai" title="Filter by spring-ai">spring-ai</button><button class="badge keyword-button" type="button" data-filter-keyword="workflow" title="Filter by workflow">workflow</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 10.5k</span>
+      <span class="fork-count">⑂ 2.3k</span>
+      <span class="commit-count">⟳ 3.2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="3336" data-pushed="1785289242" data-name="roll" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/ROLL" target="_blank" rel="noreferrer">ROLL</a></div><a class="repo-slug" href="https://github.com/alibaba/ROLL" target="_blank" rel="noreferrer">alibaba/ROLL</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">An Efficient and User-Friendly Scaling Library for Reinforcement Learning with Large Language Models<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="Reinforcement Learning" title="Filter by Reinforcement Learning">Reinforcement Learning</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic" title="Filter by agentic">agentic</button><button class="badge keyword-button" type="button" data-filter-keyword="rlhf" title="Filter by rlhf">rlhf</button><button class="badge keyword-button" type="button" data-filter-keyword="rlvr" title="Filter by rlvr">rlvr</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 3.3k</span>
+      <span class="fork-count">⑂ 303</span>
+      <span class="commit-count">⟳ 495</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="2595" data-pushed="1785371782" data-name="pipcook" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/pipcook" target="_blank" rel="noreferrer">pipcook</a></div><a class="repo-slug" href="https://github.com/alibaba/pipcook" target="_blank" rel="noreferrer">alibaba/pipcook</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">Machine learning platform for Web developers<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="AI" title="Filter by AI">AI</button><button class="badge keyword-button" type="button" data-filter-keyword="Web" title="Filter by Web">Web</button><button class="badge keyword-button" type="button" data-filter-keyword="js" title="Filter by js">js</button><button class="badge keyword-button" type="button" data-filter-keyword="machine-learning" title="Filter by machine-learning">machine-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="pipeline" title="Filter by pipeline">pipeline</button><button class="badge keyword-button" type="button" data-filter-keyword="tensorflow" title="Filter by tensorflow">tensorflow</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.6k</span>
+      <span class="fork-count">⑂ 212</span>
+      <span class="commit-count">⟳ 692</span>
+    </div>
+    <span class="last-updated">⏱ Jul 30, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1289" data-pushed="1785372508" data-name="rtp-llm" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/rtp-llm" target="_blank" rel="noreferrer">rtp-llm</a></div><a class="repo-slug" href="https://github.com/alibaba/rtp-llm" target="_blank" rel="noreferrer">alibaba/rtp-llm</a></td>
+  <td><span class="tag tag-cuda">Cuda</span></td>
+  <td class="description-cell">RTP-LLM: Alibaba&#x27;s high-performance LLM inference engine for diverse applications.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="gpt" title="Filter by gpt">gpt</button><button class="badge keyword-button" type="button" data-filter-keyword="inference" title="Filter by inference">inference</button><button class="badge keyword-button" type="button" data-filter-keyword="llama" title="Filter by llama">llama</button><button class="badge keyword-button" type="button" data-filter-keyword="llm-serving" title="Filter by llm-serving">llm-serving</button><button class="badge keyword-button" type="button" data-filter-keyword="llmops" title="Filter by llmops">llmops</button><button class="badge keyword-button" type="button" data-filter-keyword="model-serving" title="Filter by model-serving">model-serving</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.3k</span>
+      <span class="fork-count">⑂ 248</span>
+      <span class="commit-count">⟳ 4.7k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 30, 2026</span>
+  </td>
+</tr>
+<tr data-stars="470" data-pushed="1785291895" data-name="rock" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/ROCK" target="_blank" rel="noreferrer">ROCK</a></div><a class="repo-slug" href="https://github.com/alibaba/ROCK" target="_blank" rel="noreferrer">alibaba/ROCK</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">A construction kit for reinforcement learning environment management.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Reinforcement Learning" title="Filter by Reinforcement Learning">Reinforcement Learning</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 470</span>
+      <span class="fork-count">⑂ 78</span>
+      <span class="commit-count">⟳ 649</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="421" data-pushed="1785309220" data-name="torcheasyrec" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/TorchEasyRec" target="_blank" rel="noreferrer">TorchEasyRec</a></div><a class="repo-slug" href="https://github.com/alibaba/TorchEasyRec" target="_blank" rel="noreferrer">alibaba/TorchEasyRec</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">An easy-to-use framework for large scale recommendation algorithms.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="deepfm" title="Filter by deepfm">deepfm</button><button class="badge keyword-button" type="button" data-filter-keyword="din" title="Filter by din">din</button><button class="badge keyword-button" type="button" data-filter-keyword="dlrm" title="Filter by dlrm">dlrm</button><button class="badge keyword-button" type="button" data-filter-keyword="dssm" title="Filter by dssm">dssm</button><button class="badge keyword-button" type="button" data-filter-keyword="hstu" title="Filter by hstu">hstu</button><button class="badge keyword-button" type="button" data-filter-keyword="mind" title="Filter by mind">mind</button><button class="badge keyword-button" type="button" data-filter-keyword="multi-task-learning" title="Filter by multi-task-learning">multi-task-learning</button><button class="badge keyword-button" type="button" data-filter-keyword="recommendation-algorithms" title="Filter by recommendation-algorithms">recommendation-algorithms</button><button class="badge keyword-button" type="button" data-filter-keyword="recommender-system" title="Filter by recommender-system">recommender-system</button><button class="badge keyword-button" type="button" data-filter-keyword="tdm" title="Filter by tdm">tdm</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 421</span>
+      <span class="fork-count">⑂ 81</span>
+      <span class="commit-count">⟳ 495</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="352" data-pushed="1784802582" data-name="recis" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/RecIS" target="_blank" rel="noreferrer">RecIS</a></div><a class="repo-slug" href="https://github.com/alibaba/RecIS" target="_blank" rel="noreferrer">alibaba/RecIS</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">A unified architecture deep learning framework designed specifically for ultra-large-scale sparse models.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="AI" title="Filter by AI">AI</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 352</span>
+      <span class="fork-count">⑂ 25</span>
+      <span class="commit-count">⟳ 142</span>
+    </div>
+    <span class="last-updated">⏱ Jul 23, 2026</span>
+  </td>
+</tr>
+<tr data-stars="297" data-pushed="1785372986" data-name="anolisa" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/anolisa" target="_blank" rel="noreferrer">anolisa</a></div><a class="repo-slug" href="https://github.com/alibaba/anolisa" target="_blank" rel="noreferrer">alibaba/anolisa</a></td>
+  <td><span class="tag tag-rust">Rust</span></td>
+  <td class="description-cell">ANOLISA(Agentic Nexus Operating Layer &amp; Interface System Architecture)<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic" title="Filter by agentic">agentic</button><button class="badge keyword-button" type="button" data-filter-keyword="agentic-os" title="Filter by agentic-os">agentic-os</button><button class="badge keyword-button" type="button" data-filter-keyword="linux" title="Filter by linux">linux</button><button class="badge keyword-button" type="button" data-filter-keyword="os" title="Filter by os">os</button><button class="badge keyword-button" type="button" data-filter-keyword="skill" title="Filter by skill">skill</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 297</span>
+      <span class="fork-count">⑂ 78</span>
+      <span class="commit-count">⟳ 2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 30, 2026</span>
+  </td>
+</tr>
+<tr data-stars="284" data-pushed="1784761501" data-name="unifiedmodel" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/UnifiedModel" target="_blank" rel="noreferrer">UnifiedModel</a></div><a class="repo-slug" href="https://github.com/alibaba/UnifiedModel" target="_blank" rel="noreferrer">alibaba/UnifiedModel</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">The semantic layer that makes enterprise data understandable to AI agents — model entities and relations once, query through SPL/MCP/REST, and connect telemetry, services, and business objects in one object graph.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="ai-agent" title="Filter by ai-agent">ai-agent</button><button class="badge keyword-button" type="button" data-filter-keyword="aiops" title="Filter by aiops">aiops</button><button class="badge keyword-button" type="button" data-filter-keyword="cmdb" title="Filter by cmdb">cmdb</button><button class="badge keyword-button" type="button" data-filter-keyword="data-modeling" title="Filter by data-modeling">data-modeling</button><button class="badge keyword-button" type="button" data-filter-keyword="knowledge-graph" title="Filter by knowledge-graph">knowledge-graph</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp" title="Filter by mcp">mcp</button><button class="badge keyword-button" type="button" data-filter-keyword="object-graph" title="Filter by object-graph">object-graph</button><button class="badge keyword-button" type="button" data-filter-keyword="observability" title="Filter by observability">observability</button><button class="badge keyword-button" type="button" data-filter-keyword="opentelemetry" title="Filter by opentelemetry">opentelemetry</button><button class="badge keyword-button" type="button" data-filter-keyword="semantic-layer" title="Filter by semantic-layer">semantic-layer</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 284</span>
+      <span class="fork-count">⑂ 48</span>
+      <span class="commit-count">⟳ 104</span>
+    </div>
+    <span class="last-updated">⏱ Jul 22, 2026</span>
+  </td>
+</tr>
+<tr data-stars="259" data-pushed="1785312758" data-name="skill-up" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/skill-up" target="_blank" rel="noreferrer">skill-up</a></div><a class="repo-slug" href="https://github.com/alibaba/skill-up" target="_blank" rel="noreferrer">alibaba/skill-up</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">An evaluation and evolution tool for Agent Skills.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Agents" title="Filter by Agents">Agents</button><button class="badge keyword-button" type="button" data-filter-keyword="Benchmark" title="Filter by Benchmark">Benchmark</button><button class="badge keyword-button" type="button" data-filter-keyword="agent-skills" title="Filter by agent-skills">agent-skills</button><button class="badge keyword-button" type="button" data-filter-keyword="ai" title="Filter by ai">ai</button><button class="badge keyword-button" type="button" data-filter-keyword="ai-agents" title="Filter by ai-agents">ai-agents</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba" title="Filter by alibaba">alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="skills" title="Filter by skills">skills</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 259</span>
+      <span class="fork-count">⑂ 14</span>
+      <span class="commit-count">⟳ 269</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="219" data-pushed="1785333469" data-name="tair-kvcache" data-cluster="ai-agents-ml">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/tair-kvcache" target="_blank" rel="noreferrer">tair-kvcache</a></div><a class="repo-slug" href="https://github.com/alibaba/tair-kvcache" target="_blank" rel="noreferrer">alibaba/tair-kvcache</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">Alibaba Cloud&#x27;s high-performance KVCache system for LLM inference, with components for global cache management, inference simulation(HiSim), and more.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="LLM" title="Filter by LLM">LLM</button><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="hisim" title="Filter by hisim">hisim</button><button class="badge keyword-button" type="button" data-filter-keyword="kv-cache" title="Filter by kv-cache">kv-cache</button><button class="badge keyword-button" type="button" data-filter-keyword="kvcache" title="Filter by kvcache">kvcache</button><button class="badge keyword-button" type="button" data-filter-keyword="simulator" title="Filter by simulator">simulator</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 219</span>
+      <span class="fork-count">⑂ 49</span>
+      <span class="commit-count">⟳ 206</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="repo-section" id="cluster-data-databases-analytics" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-purple"></span>Data, Databases &amp; Analytics</h2>
+      <p>Databases, replication, caching, data integration, graph computing, analytics, and storage engines. Showing all qualifying repositories in this cluster by stars.</p>
+    </div>
+    <span class="count-pill">7 repos</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-repository">
+        <col class="col-language">
+        <col class="col-description">
+        <col class="col-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="29707" data-pushed="1784099052" data-name="canal" data-cluster="data-databases-analytics">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/canal" target="_blank" rel="noreferrer">canal</a></div><a class="repo-slug" href="https://github.com/alibaba/canal" target="_blank" rel="noreferrer">alibaba/canal</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">阿里巴巴 MySQL binlog 增量订阅&amp;消费组件 <div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 29.7k</span>
+      <span class="fork-count">⑂ 7.6k</span>
+      <span class="commit-count">⟳ 1.7k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 15, 2026</span>
+  </td>
+</tr>
+<tr data-stars="28179" data-pushed="1782654114" data-name="druid" data-cluster="data-databases-analytics">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/druid" target="_blank" rel="noreferrer">druid</a></div><a class="repo-slug" href="https://github.com/alibaba/druid" target="_blank" rel="noreferrer">alibaba/druid</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">阿里云计算平台DataWorks(https://help.aliyun.com/document_detail/137663.html) 团队出品，为监控而生的数据库连接池<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 28.2k</span>
+      <span class="fork-count">⑂ 8.6k</span>
+      <span class="commit-count">⟳ 7.8k</span>
+    </div>
+    <span class="last-updated">⏱ Jun 28, 2026</span>
+  </td>
+</tr>
+<tr data-stars="17291" data-pushed="1783413665" data-name="datax" data-cluster="data-databases-analytics">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/DataX" target="_blank" rel="noreferrer">DataX</a></div><a class="repo-slug" href="https://github.com/alibaba/DataX" target="_blank" rel="noreferrer">alibaba/DataX</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">DataX是阿里云DataWorks数据集成的开源版本。<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 17.3k</span>
+      <span class="fork-count">⑂ 5.7k</span>
+      <span class="commit-count">⟳ 727</span>
+    </div>
+    <span class="last-updated">⏱ Jul 07, 2026</span>
+  </td>
+</tr>
+<tr data-stars="5851" data-pushed="1784352824" data-name="alisql" data-cluster="data-databases-analytics">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/AliSQL" target="_blank" rel="noreferrer">AliSQL</a></div><a class="repo-slug" href="https://github.com/alibaba/AliSQL" target="_blank" rel="noreferrer">alibaba/AliSQL</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">AliSQL is a MySQL branch originated from Alibaba Group. Fetch document from Release Notes at bottom.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="alisql" title="Filter by alisql">alisql</button><button class="badge keyword-button" type="button" data-filter-keyword="database" title="Filter by database">database</button><button class="badge keyword-button" type="button" data-filter-keyword="duckdb" title="Filter by duckdb">duckdb</button><button class="badge keyword-button" type="button" data-filter-keyword="mysql" title="Filter by mysql">mysql</button><button class="badge keyword-button" type="button" data-filter-keyword="vector" title="Filter by vector">vector</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 5.9k</span>
+      <span class="fork-count">⑂ 903</span>
+      <span class="commit-count">⟳ 98.3k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 18, 2026</span>
+  </td>
+</tr>
+<tr data-stars="5591" data-pushed="1784863000" data-name="jetcache" data-cluster="data-databases-analytics">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/jetcache" target="_blank" rel="noreferrer">jetcache</a></div><a class="repo-slug" href="https://github.com/alibaba/jetcache" target="_blank" rel="noreferrer">alibaba/jetcache</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">JetCache is a Java cache framework.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="cache" title="Filter by cache">cache</button><button class="badge keyword-button" type="button" data-filter-keyword="jcache" title="Filter by jcache">jcache</button><button class="badge keyword-button" type="button" data-filter-keyword="redis" title="Filter by redis">redis</button><button class="badge keyword-button" type="button" data-filter-keyword="spring" title="Filter by spring">spring</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cache" title="Filter by spring-cache">spring-cache</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 5.6k</span>
+      <span class="fork-count">⑂ 1.1k</span>
+      <span class="commit-count">⟳ 1.3k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 24, 2026</span>
+  </td>
+</tr>
+<tr data-stars="3557" data-pushed="1784690025" data-name="graphscope" data-cluster="data-databases-analytics">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/GraphScope" target="_blank" rel="noreferrer">GraphScope</a></div><a class="repo-slug" href="https://github.com/alibaba/GraphScope" target="_blank" rel="noreferrer">alibaba/GraphScope</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">🔨 🍇 💻 🚀 GraphScope: A One-Stop Large-Scale Graph Computing System from Alibaba | 一站式图计算系统<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Analytics" title="Filter by Analytics">Analytics</button><button class="badge keyword-button" type="button" data-filter-keyword="big-data" title="Filter by big-data">big-data</button><button class="badge keyword-button" type="button" data-filter-keyword="data-science" title="Filter by data-science">data-science</button><button class="badge keyword-button" type="button" data-filter-keyword="graph" title="Filter by graph">graph</button><button class="badge keyword-button" type="button" data-filter-keyword="graph-analytics" title="Filter by graph-analytics">graph-analytics</button><button class="badge keyword-button" type="button" data-filter-keyword="graph-computation" title="Filter by graph-computation">graph-computation</button><button class="badge keyword-button" type="button" data-filter-keyword="graph-computing" title="Filter by graph-computing">graph-computing</button><button class="badge keyword-button" type="button" data-filter-keyword="graph-data" title="Filter by graph-data">graph-data</button><button class="badge keyword-button" type="button" data-filter-keyword="graph-neural-networks" title="Filter by graph-neural-networks">graph-neural-networks</button><button class="badge keyword-button" type="button" data-filter-keyword="gremlin" title="Filter by gremlin">gremlin</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 3.6k</span>
+      <span class="fork-count">⑂ 470</span>
+      <span class="commit-count">⟳ 2.3k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 22, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1817" data-pushed="1785117930" data-name="mongoshake" data-cluster="data-databases-analytics">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/MongoShake" target="_blank" rel="noreferrer">MongoShake</a></div><a class="repo-slug" href="https://github.com/alibaba/MongoShake" target="_blank" rel="noreferrer">alibaba/MongoShake</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">MongoShake is a universal data replication platform based on MongoDB&#x27;s oplog. Redundant replication and active-active replication are two most important functions. 基于mongodb oplog的集群复制工具，可以满足迁移和同步的需求，进一步实现灾备和多活功能。<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="active-active" title="Filter by active-active">active-active</button><button class="badge keyword-button" type="button" data-filter-keyword="mongo-database" title="Filter by mongo-database">mongo-database</button><button class="badge keyword-button" type="button" data-filter-keyword="mongodb-oplog" title="Filter by mongodb-oplog">mongodb-oplog</button><button class="badge keyword-button" type="button" data-filter-keyword="mongoshake" title="Filter by mongoshake">mongoshake</button><button class="badge keyword-button" type="button" data-filter-keyword="replication" title="Filter by replication">replication</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.8k</span>
+      <span class="fork-count">⑂ 466</span>
+      <span class="commit-count">⟳ 804</span>
+    </div>
+    <span class="last-updated">⏱ Jul 27, 2026</span>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="repo-section" id="cluster-cloud-microservices-middleware" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-cyan"></span>Cloud, Microservices &amp; Middleware</h2>
+      <p>Service discovery, configuration, cloud-native frameworks, resilience, orchestration, and distributed middleware. Showing all qualifying repositories in this cluster by stars.</p>
+    </div>
+    <span class="count-pill">5 repos</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-repository">
+        <col class="col-language">
+        <col class="col-description">
+        <col class="col-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="33222" data-pushed="1785329543" data-name="nacos" data-cluster="cloud-microservices-middleware">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/nacos" target="_blank" rel="noreferrer">nacos</a></div><a class="repo-slug" href="https://github.com/alibaba/nacos" target="_blank" rel="noreferrer">alibaba/nacos</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">an easy-to-use dynamic service discovery, configuration and service management platform for building AI cloud native applications.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="Microservices" title="Filter by Microservices">Microservices</button><button class="badge keyword-button" type="button" data-filter-keyword="a2a-registry" title="Filter by a2a-registry">a2a-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="ai-registry" title="Filter by ai-registry">ai-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="configuration-management" title="Filter by configuration-management">configuration-management</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-configuration" title="Filter by distributed-configuration">distributed-configuration</button><button class="badge keyword-button" type="button" data-filter-keyword="dubbo" title="Filter by dubbo">dubbo</button><button class="badge keyword-button" type="button" data-filter-keyword="istio" title="Filter by istio">istio</button><button class="badge keyword-button" type="button" data-filter-keyword="kubernetes" title="Filter by kubernetes">kubernetes</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp" title="Filter by mcp">mcp</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp-management" title="Filter by mcp-management">mcp-management</button><button class="badge keyword-button" type="button" data-filter-keyword="mcp-registry" title="Filter by mcp-registry">mcp-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="nacos" title="Filter by nacos">nacos</button><button class="badge keyword-button" type="button" data-filter-keyword="prompt" title="Filter by prompt">prompt</button><button class="badge keyword-button" type="button" data-filter-keyword="skills" title="Filter by skills">skills</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud" title="Filter by spring-cloud">spring-cloud</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 33.2k</span>
+      <span class="fork-count">⑂ 13.3k</span>
+      <span class="commit-count">⟳ 6.2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="29143" data-pushed="1785201018" data-name="spring-cloud-alibaba" data-cluster="cloud-microservices-middleware">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/spring-cloud-alibaba" target="_blank" rel="noreferrer">spring-cloud-alibaba</a></div><a class="repo-slug" href="https://github.com/alibaba/spring-cloud-alibaba" target="_blank" rel="noreferrer">alibaba/spring-cloud-alibaba</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">Spring Cloud Alibaba provides a one-stop solution for application development for the distributed solutions of Alibaba middleware.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="Microservices" title="Filter by Microservices">Microservices</button><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba" title="Filter by alibaba">alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba-middleware" title="Filter by alibaba-middleware">alibaba-middleware</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba-oss" title="Filter by alibaba-oss">alibaba-oss</button><button class="badge keyword-button" type="button" data-filter-keyword="aliyun" title="Filter by aliyun">aliyun</button><button class="badge keyword-button" type="button" data-filter-keyword="circuit-breaker" title="Filter by circuit-breaker">circuit-breaker</button><button class="badge keyword-button" type="button" data-filter-keyword="cloud-native" title="Filter by cloud-native">cloud-native</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-configuration" title="Filter by distributed-configuration">distributed-configuration</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-messaging" title="Filter by distributed-messaging">distributed-messaging</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-transaction" title="Filter by distributed-transaction">distributed-transaction</button><button class="badge keyword-button" type="button" data-filter-keyword="dubbo" title="Filter by dubbo">dubbo</button><button class="badge keyword-button" type="button" data-filter-keyword="nacos" title="Filter by nacos">nacos</button><button class="badge keyword-button" type="button" data-filter-keyword="rocketmq" title="Filter by rocketmq">rocketmq</button><button class="badge keyword-button" type="button" data-filter-keyword="service-discovery" title="Filter by service-discovery">service-discovery</button><button class="badge keyword-button" type="button" data-filter-keyword="service-registry" title="Filter by service-registry">service-registry</button><button class="badge keyword-button" type="button" data-filter-keyword="spring" title="Filter by spring">spring</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud" title="Filter by spring-cloud">spring-cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud-alibaba" title="Filter by spring-cloud-alibaba">spring-cloud-alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="spring-cloud-core" title="Filter by spring-cloud-core">spring-cloud-core</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 29.1k</span>
+      <span class="fork-count">⑂ 8.5k</span>
+      <span class="commit-count">⟳ 2.7k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 28, 2026</span>
+  </td>
+</tr>
+<tr data-stars="23140" data-pushed="1779872331" data-name="sentinel" data-cluster="cloud-microservices-middleware">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/Sentinel" target="_blank" rel="noreferrer">Sentinel</a></div><a class="repo-slug" href="https://github.com/alibaba/Sentinel" target="_blank" rel="noreferrer">alibaba/Sentinel</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">A powerful flow control component enabling reliability, resilience and monitoring for microservices. (面向云原生微服务的高可用流控防护组件)<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Observability" title="Filter by Observability">Observability</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba" title="Filter by alibaba">alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="circuit-breaker" title="Filter by circuit-breaker">circuit-breaker</button><button class="badge keyword-button" type="button" data-filter-keyword="cloud-native" title="Filter by cloud-native">cloud-native</button><button class="badge keyword-button" type="button" data-filter-keyword="java" title="Filter by java">java</button><button class="badge keyword-button" type="button" data-filter-keyword="microservice" title="Filter by microservice">microservice</button><button class="badge keyword-button" type="button" data-filter-keyword="microservices" title="Filter by microservices">microservices</button><button class="badge keyword-button" type="button" data-filter-keyword="rate-limiting" title="Filter by rate-limiting">rate-limiting</button><button class="badge keyword-button" type="button" data-filter-keyword="reliability" title="Filter by reliability">reliability</button><button class="badge keyword-button" type="button" data-filter-keyword="resiliency" title="Filter by resiliency">resiliency</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 23.1k</span>
+      <span class="fork-count">⑂ 8.1k</span>
+      <span class="commit-count">⟳ 850</span>
+    </div>
+    <span class="last-updated">⏱ May 27, 2026</span>
+  </td>
+</tr>
+<tr data-stars="2958" data-pushed="1783002890" data-name="sentinel-golang" data-cluster="cloud-microservices-middleware">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/sentinel-golang" target="_blank" rel="noreferrer">sentinel-golang</a></div><a class="repo-slug" href="https://github.com/alibaba/sentinel-golang" target="_blank" rel="noreferrer">alibaba/sentinel-golang</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">Sentinel Go enables reliability and resiliency for Go microservices<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="cloud-native" title="Filter by cloud-native">cloud-native</button><button class="badge keyword-button" type="button" data-filter-keyword="go" title="Filter by go">go</button><button class="badge keyword-button" type="button" data-filter-keyword="golang" title="Filter by golang">golang</button><button class="badge keyword-button" type="button" data-filter-keyword="microservice" title="Filter by microservice">microservice</button><button class="badge keyword-button" type="button" data-filter-keyword="microservices" title="Filter by microservices">microservices</button><button class="badge keyword-button" type="button" data-filter-keyword="middleware" title="Filter by middleware">middleware</button><button class="badge keyword-button" type="button" data-filter-keyword="rate-limiting" title="Filter by rate-limiting">rate-limiting</button><button class="badge keyword-button" type="button" data-filter-keyword="resiliency" title="Filter by resiliency">resiliency</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 3k</span>
+      <span class="fork-count">⑂ 455</span>
+      <span class="commit-count">⟳ 285</span>
+    </div>
+    <span class="last-updated">⏱ Jul 02, 2026</span>
+  </td>
+</tr>
+<tr data-stars="909" data-pushed="1784853660" data-name="smartengine" data-cluster="cloud-microservices-middleware">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/SmartEngine" target="_blank" rel="noreferrer">SmartEngine</a></div><a class="repo-slug" href="https://github.com/alibaba/SmartEngine" target="_blank" rel="noreferrer">alibaba/SmartEngine</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">SmartEngine is a lightweight business orchestration engine.<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 909</span>
+      <span class="fork-count">⑂ 240</span>
+      <span class="commit-count">⟳ 444</span>
+    </div>
+    <span class="last-updated">⏱ Jul 24, 2026</span>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="repo-section" id="cluster-languages-libraries-tools" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-green"></span>Languages, Libraries &amp; Developer Tools</h2>
+      <p>Java and C++ libraries, code quality, diagnostics, serialization, testing, and general developer tooling. Showing all qualifying repositories in this cluster by stars.</p>
+    </div>
+    <span class="count-pill">10 repos</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-repository">
+        <col class="col-language">
+        <col class="col-description">
+        <col class="col-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="37457" data-pushed="1784886269" data-name="arthas" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/arthas" target="_blank" rel="noreferrer">arthas</a></div><a class="repo-slug" href="https://github.com/alibaba/arthas" target="_blank" rel="noreferrer">alibaba/arthas</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">Alibaba Java Diagnostic Tool Arthas/Alibaba Java诊断利器Arthas<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="Observability" title="Filter by Observability">Observability</button><button class="badge keyword-button" type="button" data-filter-keyword="agent" title="Filter by agent">agent</button><button class="badge keyword-button" type="button" data-filter-keyword="alibaba" title="Filter by alibaba">alibaba</button><button class="badge keyword-button" type="button" data-filter-keyword="arthas" title="Filter by arthas">arthas</button><button class="badge keyword-button" type="button" data-filter-keyword="classloader" title="Filter by classloader">classloader</button><button class="badge keyword-button" type="button" data-filter-keyword="diagnosis" title="Filter by diagnosis">diagnosis</button><button class="badge keyword-button" type="button" data-filter-keyword="jvm" title="Filter by jvm">jvm</button><button class="badge keyword-button" type="button" data-filter-keyword="trace" title="Filter by trace">trace</button><button class="badge keyword-button" type="button" data-filter-keyword="trouble-shooting" title="Filter by trouble-shooting">trouble-shooting</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 37.5k</span>
+      <span class="fork-count">⑂ 7.6k</span>
+      <span class="commit-count">⟳ 2.2k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 24, 2026</span>
+  </td>
+</tr>
+<tr data-stars="8290" data-pushed="1781813863" data-name="transmittable-thread-local" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/transmittable-thread-local" target="_blank" rel="noreferrer">transmittable-thread-local</a></div><a class="repo-slug" href="https://github.com/alibaba/transmittable-thread-local" target="_blank" rel="noreferrer">alibaba/transmittable-thread-local</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">📌 a missing Java std lib(simple &amp; 0-dependency) for framework/middleware, provide an enhanced InheritableThreadLocal that transmits values between threads even using thread pooling components.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Microservices" title="Filter by Microservices">Microservices</button><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="apm" title="Filter by apm">apm</button><button class="badge keyword-button" type="button" data-filter-keyword="async" title="Filter by async">async</button><button class="badge keyword-button" type="button" data-filter-keyword="async-context" title="Filter by async-context">async-context</button><button class="badge keyword-button" type="button" data-filter-keyword="asynchronous" title="Filter by asynchronous">asynchronous</button><button class="badge keyword-button" type="button" data-filter-keyword="asynchronous-context" title="Filter by asynchronous-context">asynchronous-context</button><button class="badge keyword-button" type="button" data-filter-keyword="context" title="Filter by context">context</button><button class="badge keyword-button" type="button" data-filter-keyword="dapper" title="Filter by dapper">dapper</button><button class="badge keyword-button" type="button" data-filter-keyword="distributed-tracing" title="Filter by distributed-tracing">distributed-tracing</button><button class="badge keyword-button" type="button" data-filter-keyword="executor" title="Filter by executor">executor</button><button class="badge keyword-button" type="button" data-filter-keyword="forkjoinpool" title="Filter by forkjoinpool">forkjoinpool</button><button class="badge keyword-button" type="button" data-filter-keyword="framework" title="Filter by framework">framework</button><button class="badge keyword-button" type="button" data-filter-keyword="middleware" title="Filter by middleware">middleware</button><button class="badge keyword-button" type="button" data-filter-keyword="thread-pool" title="Filter by thread-pool">thread-pool</button><button class="badge keyword-button" type="button" data-filter-keyword="threadlocal" title="Filter by threadlocal">threadlocal</button><button class="badge keyword-button" type="button" data-filter-keyword="threadsafe" title="Filter by threadsafe">threadsafe</button><button class="badge keyword-button" type="button" data-filter-keyword="tracing" title="Filter by tracing">tracing</button><button class="badge keyword-button" type="button" data-filter-keyword="transmittable" title="Filter by transmittable">transmittable</button><button class="badge keyword-button" type="button" data-filter-keyword="transmittable-thread-local" title="Filter by transmittable-thread-local">transmittable-thread-local</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 8.3k</span>
+      <span class="fork-count">⑂ 1.7k</span>
+      <span class="commit-count">⟳ 1k</span>
+    </div>
+    <span class="last-updated">⏱ Jun 18, 2026</span>
+  </td>
+</tr>
+<tr data-stars="5604" data-pushed="1783258859" data-name="qlexpress" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/QLExpress" target="_blank" rel="noreferrer">QLExpress</a></div><a class="repo-slug" href="https://github.com/alibaba/QLExpress" target="_blank" rel="noreferrer">alibaba/QLExpress</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">QLExpress is a powerful, lightweight, dynamic language for the Java platform aimed at improving developers’ productivity in different business scenes.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 5.6k</span>
+      <span class="fork-count">⑂ 1.2k</span>
+      <span class="commit-count">⟳ 934</span>
+    </div>
+    <span class="last-updated">⏱ Jul 05, 2026</span>
+  </td>
+</tr>
+<tr data-stars="4361" data-pushed="1785324742" data-name="fastjson2" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/fastjson2" target="_blank" rel="noreferrer">fastjson2</a></div><a class="repo-slug" href="https://github.com/alibaba/fastjson2" target="_blank" rel="noreferrer">alibaba/fastjson2</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">🚄 FASTJSON2 is a Java JSON  library with excellent performance.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="android" title="Filter by android">android</button><button class="badge keyword-button" type="button" data-filter-keyword="big-data" title="Filter by big-data">big-data</button><button class="badge keyword-button" type="button" data-filter-keyword="deserialization" title="Filter by deserialization">deserialization</button><button class="badge keyword-button" type="button" data-filter-keyword="fastjson" title="Filter by fastjson">fastjson</button><button class="badge keyword-button" type="button" data-filter-keyword="fastjson2" title="Filter by fastjson2">fastjson2</button><button class="badge keyword-button" type="button" data-filter-keyword="graal" title="Filter by graal">graal</button><button class="badge keyword-button" type="button" data-filter-keyword="graalvm-native-image" title="Filter by graalvm-native-image">graalvm-native-image</button><button class="badge keyword-button" type="button" data-filter-keyword="high-performance" title="Filter by high-performance">high-performance</button><button class="badge keyword-button" type="button" data-filter-keyword="java-json" title="Filter by java-json">java-json</button><button class="badge keyword-button" type="button" data-filter-keyword="json" title="Filter by json">json</button><button class="badge keyword-button" type="button" data-filter-keyword="json-deserialization" title="Filter by json-deserialization">json-deserialization</button><button class="badge keyword-button" type="button" data-filter-keyword="json-parser" title="Filter by json-parser">json-parser</button><button class="badge keyword-button" type="button" data-filter-keyword="json-path" title="Filter by json-path">json-path</button><button class="badge keyword-button" type="button" data-filter-keyword="json-serialization" title="Filter by json-serialization">json-serialization</button><button class="badge keyword-button" type="button" data-filter-keyword="json-serializer" title="Filter by json-serializer">json-serializer</button><button class="badge keyword-button" type="button" data-filter-keyword="jsonb" title="Filter by jsonb">jsonb</button><button class="badge keyword-button" type="button" data-filter-keyword="serialization" title="Filter by serialization">serialization</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 4.4k</span>
+      <span class="fork-count">⑂ 581</span>
+      <span class="commit-count">⟳ 5k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="2192" data-pushed="1783489016" data-name="async_simple" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/async_simple" target="_blank" rel="noreferrer">async_simple</a></div><a class="repo-slug" href="https://github.com/alibaba/async_simple" target="_blank" rel="noreferrer">alibaba/async_simple</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">Simple, light-weight and easy-to-use asynchronous components <div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="asynchronous" title="Filter by asynchronous">asynchronous</button><button class="badge keyword-button" type="button" data-filter-keyword="coroutines" title="Filter by coroutines">coroutines</button><button class="badge keyword-button" type="button" data-filter-keyword="cpp20" title="Filter by cpp20">cpp20</button><button class="badge keyword-button" type="button" data-filter-keyword="cpp20-modules" title="Filter by cpp20-modules">cpp20-modules</button><button class="badge keyword-button" type="button" data-filter-keyword="modules" title="Filter by modules">modules</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.2k</span>
+      <span class="fork-count">⑂ 311</span>
+      <span class="commit-count">⟳ 347</span>
+    </div>
+    <span class="last-updated">⏱ Jul 08, 2026</span>
+  </td>
+</tr>
+<tr data-stars="2161" data-pushed="1785238903" data-name="yalantinglibs" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/yalantinglibs" target="_blank" rel="noreferrer">yalantinglibs</a></div><a class="repo-slug" href="https://github.com/alibaba/yalantinglibs" target="_blank" rel="noreferrer">alibaba/yalantinglibs</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">A collection of modern C++ libraries, include coro_http, coro_rpc, compile-time reflection, struct_pack, struct_json, struct_xml, struct_pb, easylog, async_simple etc.<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.2k</span>
+      <span class="fork-count">⑂ 328</span>
+      <span class="commit-count">⟳ 892</span>
+    </div>
+    <span class="last-updated">⏱ Jul 28, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1117" data-pushed="1778060620" data-name="f2e-spec" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/f2e-spec" target="_blank" rel="noreferrer">f2e-spec</a></div><a class="repo-slug" href="https://github.com/alibaba/f2e-spec" target="_blank" rel="noreferrer">alibaba/f2e-spec</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">Alibaba Front-end Coding Guidelines and Relevant Tools<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="guidelines" title="Filter by guidelines">guidelines</button><button class="badge keyword-button" type="button" data-filter-keyword="linter" title="Filter by linter">linter</button><button class="badge keyword-button" type="button" data-filter-keyword="specification" title="Filter by specification">specification</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.1k</span>
+      <span class="fork-count">⑂ 214</span>
+      <span class="commit-count">⟳ 455</span>
+    </div>
+    <span class="last-updated">⏱ May 06, 2026</span>
+  </td>
+</tr>
+<tr data-stars="966" data-pushed="1784105211" data-name="java-dns-cache-manipulator" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/java-dns-cache-manipulator" target="_blank" rel="noreferrer">java-dns-cache-manipulator</a></div><a class="repo-slug" href="https://github.com/alibaba/java-dns-cache-manipulator" target="_blank" rel="noreferrer">alibaba/java-dns-cache-manipulator</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">🌏 A tiny 0-dependency thread-safe Java™ lib for setting/viewing dns programmatically without touching host file, make unit/integration testing portable; and a tiny tool for setting/viewing dns of running JVM process.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button><button class="badge keyword-button" type="button" data-filter-keyword="dns" title="Filter by dns">dns</button><button class="badge keyword-button" type="button" data-filter-keyword="dns-cache" title="Filter by dns-cache">dns-cache</button><button class="badge keyword-button" type="button" data-filter-keyword="dns-cache-manipulator" title="Filter by dns-cache-manipulator">dns-cache-manipulator</button><button class="badge keyword-button" type="button" data-filter-keyword="domain-name" title="Filter by domain-name">domain-name</button><button class="badge keyword-button" type="button" data-filter-keyword="hacking" title="Filter by hacking">hacking</button><button class="badge keyword-button" type="button" data-filter-keyword="hacking-code" title="Filter by hacking-code">hacking-code</button><button class="badge keyword-button" type="button" data-filter-keyword="integration-testing" title="Filter by integration-testing">integration-testing</button><button class="badge keyword-button" type="button" data-filter-keyword="jvm" title="Filter by jvm">jvm</button><button class="badge keyword-button" type="button" data-filter-keyword="testing" title="Filter by testing">testing</button><button class="badge keyword-button" type="button" data-filter-keyword="threadsafe" title="Filter by threadsafe">threadsafe</button><button class="badge keyword-button" type="button" data-filter-keyword="unit-testing" title="Filter by unit-testing">unit-testing</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 966</span>
+      <span class="fork-count">⑂ 192</span>
+      <span class="commit-count">⟳ 487</span>
+    </div>
+    <span class="last-updated">⏱ Jul 15, 2026</span>
+  </td>
+</tr>
+<tr data-stars="523" data-pushed="1780906794" data-name="bytekit" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/bytekit" target="_blank" rel="noreferrer">bytekit</a></div><a class="repo-slug" href="https://github.com/alibaba/bytekit" target="_blank" rel="noreferrer">alibaba/bytekit</a></td>
+  <td><span class="tag tag-java">Java</span></td>
+  <td class="description-cell">Java Bytecode Kit<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Java" title="Filter by Java">Java</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 523</span>
+      <span class="fork-count">⑂ 116</span>
+      <span class="commit-count">⟳ 107</span>
+    </div>
+    <span class="last-updated">⏱ Jun 08, 2026</span>
+  </td>
+</tr>
+<tr data-stars="387" data-pushed="1781411008" data-name="smartresume" data-cluster="languages-libraries-tools">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/SmartResume" target="_blank" rel="noreferrer">SmartResume</a></div><a class="repo-slug" href="https://github.com/alibaba/SmartResume" target="_blank" rel="noreferrer">alibaba/SmartResume</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">No description provided.<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 387</span>
+      <span class="fork-count">⑂ 60</span>
+      <span class="commit-count">⟳ 31</span>
+    </div>
+    <span class="last-updated">⏱ Jun 14, 2026</span>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="repo-section" id="cluster-web-mobile-ui" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-yellow"></span>Web, Mobile &amp; User Interfaces</h2>
+      <p>React, TypeScript, frontend tooling, mobile integration, visualization, forms, and interface automation. Showing all qualifying repositories in this cluster by stars.</p>
+    </div>
+    <span class="count-pill">7 repos</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-repository">
+        <col class="col-language">
+        <col class="col-description">
+        <col class="col-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="14967" data-pushed="1779250734" data-name="hooks" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/hooks" target="_blank" rel="noreferrer">hooks</a></div><a class="repo-slug" href="https://github.com/alibaba/hooks" target="_blank" rel="noreferrer">alibaba/hooks</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">A high-quality &amp; reliable React Hooks library.   https://alibaba.github.io/hooks/<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Web" title="Filter by Web">Web</button><button class="badge keyword-button" type="button" data-filter-keyword="ahooks" title="Filter by ahooks">ahooks</button><button class="badge keyword-button" type="button" data-filter-keyword="hooks-library" title="Filter by hooks-library">hooks-library</button><button class="badge keyword-button" type="button" data-filter-keyword="react" title="Filter by react">react</button><button class="badge keyword-button" type="button" data-filter-keyword="react-hooks" title="Filter by react-hooks">react-hooks</button><button class="badge keyword-button" type="button" data-filter-keyword="umi-hooks" title="Filter by umi-hooks">umi-hooks</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 15k</span>
+      <span class="fork-count">⑂ 2.8k</span>
+      <span class="commit-count">⟳ 2.8k</span>
+    </div>
+    <span class="last-updated">⏱ May 20, 2026</span>
+  </td>
+</tr>
+<tr data-stars="7850" data-pushed="1779776212" data-name="x-render" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/x-render" target="_blank" rel="noreferrer">x-render</a></div><a class="repo-slug" href="https://github.com/alibaba/x-render" target="_blank" rel="noreferrer">alibaba/x-render</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">🚴‍♀️ Very easy to use process form table chart solution.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="ant" title="Filter by ant">ant</button><button class="badge keyword-button" type="button" data-filter-keyword="ant-design" title="Filter by ant-design">ant-design</button><button class="badge keyword-button" type="button" data-filter-keyword="chart" title="Filter by chart">chart</button><button class="badge keyword-button" type="button" data-filter-keyword="form" title="Filter by form">form</button><button class="badge keyword-button" type="button" data-filter-keyword="formrender" title="Filter by formrender">formrender</button><button class="badge keyword-button" type="button" data-filter-keyword="javascript" title="Filter by javascript">javascript</button><button class="badge keyword-button" type="button" data-filter-keyword="json-schema" title="Filter by json-schema">json-schema</button><button class="badge keyword-button" type="button" data-filter-keyword="list" title="Filter by list">list</button><button class="badge keyword-button" type="button" data-filter-keyword="react" title="Filter by react">react</button><button class="badge keyword-button" type="button" data-filter-keyword="table" title="Filter by table">table</button><button class="badge keyword-button" type="button" data-filter-keyword="typescript" title="Filter by typescript">typescript</button><button class="badge keyword-button" type="button" data-filter-keyword="webpack" title="Filter by webpack">webpack</button><button class="badge keyword-button" type="button" data-filter-keyword="widget" title="Filter by widget">widget</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 7.8k</span>
+      <span class="fork-count">⑂ 1.1k</span>
+      <span class="commit-count">⟳ 4.2k</span>
+    </div>
+    <span class="last-updated">⏱ May 26, 2026</span>
+  </td>
+</tr>
+<tr data-stars="7195" data-pushed="1781005063" data-name="flutter_boost" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/flutter_boost" target="_blank" rel="noreferrer">flutter_boost</a></div><a class="repo-slug" href="https://github.com/alibaba/flutter_boost" target="_blank" rel="noreferrer">alibaba/flutter_boost</a></td>
+  <td><span class="tag tag-dart">Dart</span></td>
+  <td class="description-cell">FlutterBoost is a Flutter plugin which enables hybrid integration of Flutter for your existing native apps with minimum efforts<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Mobile" title="Filter by Mobile">Mobile</button><button class="badge keyword-button" type="button" data-filter-keyword="android" title="Filter by android">android</button><button class="badge keyword-button" type="button" data-filter-keyword="dart" title="Filter by dart">dart</button><button class="badge keyword-button" type="button" data-filter-keyword="flutter" title="Filter by flutter">flutter</button><button class="badge keyword-button" type="button" data-filter-keyword="hybrid-app" title="Filter by hybrid-app">hybrid-app</button><button class="badge keyword-button" type="button" data-filter-keyword="hybrid-flutter" title="Filter by hybrid-flutter">hybrid-flutter</button><button class="badge keyword-button" type="button" data-filter-keyword="ios" title="Filter by ios">ios</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 7.2k</span>
+      <span class="fork-count">⑂ 1.3k</span>
+      <span class="commit-count">⟳ 1.3k</span>
+    </div>
+    <span class="last-updated">⏱ Jun 09, 2026</span>
+  </td>
+</tr>
+<tr data-stars="2617" data-pushed="1781700660" data-name="kiwi" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/kiwi" target="_blank" rel="noreferrer">kiwi</a></div><a class="repo-slug" href="https://github.com/alibaba/kiwi" target="_blank" rel="noreferrer">alibaba/kiwi</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">🐤 Kiwi-国际化翻译全流程解决方案<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="g11n" title="Filter by g11n">g11n</button><button class="badge keyword-button" type="button" data-filter-keyword="i18n" title="Filter by i18n">i18n</button><button class="badge keyword-button" type="button" data-filter-keyword="intl" title="Filter by intl">intl</button><button class="badge keyword-button" type="button" data-filter-keyword="translation" title="Filter by translation">translation</button><button class="badge keyword-button" type="button" data-filter-keyword="typescript" title="Filter by typescript">typescript</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.6k</span>
+      <span class="fork-count">⑂ 239</span>
+      <span class="commit-count">⟳ 357</span>
+    </div>
+    <span class="last-updated">⏱ Jun 17, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1355" data-pushed="1784549472" data-name="react-intl-universal" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/react-intl-universal" target="_blank" rel="noreferrer">react-intl-universal</a></div><a class="repo-slug" href="https://github.com/alibaba/react-intl-universal" target="_blank" rel="noreferrer">alibaba/react-intl-universal</a></td>
+  <td><span class="tag tag-js">JavaScript</span></td>
+  <td class="description-cell">Internationalize React apps. Not only for Component but also for Vanilla JS.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Web" title="Filter by Web">Web</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.4k</span>
+      <span class="fork-count">⑂ 158</span>
+      <span class="commit-count">⟳ 330</span>
+    </div>
+    <span class="last-updated">⏱ Jul 20, 2026</span>
+  </td>
+</tr>
+<tr data-stars="510" data-pushed="1785332714" data-name="cloud-charts" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/cloud-charts" target="_blank" rel="noreferrer">cloud-charts</a></div><a class="repo-slug" href="https://github.com/alibaba/cloud-charts" target="_blank" rel="noreferrer">alibaba/cloud-charts</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">开箱即用的前端图表库，简单配置就能拥有漂亮的可视化图表<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 510</span>
+      <span class="fork-count">⑂ 75</span>
+      <span class="commit-count">⟳ 1k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="228" data-pushed="1782705691" data-name="canvas-ui" data-cluster="web-mobile-ui">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/canvas-ui" target="_blank" rel="noreferrer">canvas-ui</a></div><a class="repo-slug" href="https://github.com/alibaba/canvas-ui" target="_blank" rel="noreferrer">alibaba/canvas-ui</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">UI Renderer runs on top of the HTML5 Canvas<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="canvas" title="Filter by canvas">canvas</button><button class="badge keyword-button" type="button" data-filter-keyword="react" title="Filter by react">react</button><button class="badge keyword-button" type="button" data-filter-keyword="typescript" title="Filter by typescript">typescript</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 228</span>
+      <span class="fork-count">⑂ 22</span>
+      <span class="commit-count">⟳ 73</span>
+    </div>
+    <span class="last-updated">⏱ Jun 29, 2026</span>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="repo-section" id="cluster-systems-networking-observability" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-red"></span>Systems, Networking &amp; Observability</h2>
+      <p>Web servers, protocols, operating systems, performance, telemetry, diagnostics, and infrastructure monitoring. Showing all qualifying repositories in this cluster by stars.</p>
+    </div>
+    <span class="count-pill">6 repos</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-repository">
+        <col class="col-language">
+        <col class="col-description">
+        <col class="col-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="13310" data-pushed="1785322901" data-name="tengine" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/tengine" target="_blank" rel="noreferrer">tengine</a></div><a class="repo-slug" href="https://github.com/alibaba/tengine" target="_blank" rel="noreferrer">alibaba/tengine</a></td>
+  <td><span class="tag tag-c">C</span></td>
+  <td class="description-cell">A distribution of Nginx with some advanced features<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="http3" title="Filter by http3">http3</button><button class="badge keyword-button" type="button" data-filter-keyword="ingress" title="Filter by ingress">ingress</button><button class="badge keyword-button" type="button" data-filter-keyword="nginx" title="Filter by nginx">nginx</button><button class="badge keyword-button" type="button" data-filter-keyword="quic" title="Filter by quic">quic</button><button class="badge keyword-button" type="button" data-filter-keyword="tengine" title="Filter by tengine">tengine</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 13.3k</span>
+      <span class="fork-count">⑂ 2.5k</span>
+      <span class="commit-count">⟳ 1.9k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="2173" data-pushed="1785140953" data-name="loongcollector" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/loongcollector" target="_blank" rel="noreferrer">loongcollector</a></div><a class="repo-slug" href="https://github.com/alibaba/loongcollector" target="_blank" rel="noreferrer">alibaba/loongcollector</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">Fast and Lightweight Observability Data Collector<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Observability" title="Filter by Observability">Observability</button><button class="badge keyword-button" type="button" data-filter-keyword="aliyun" title="Filter by aliyun">aliyun</button><button class="badge keyword-button" type="button" data-filter-keyword="apm" title="Filter by apm">apm</button><button class="badge keyword-button" type="button" data-filter-keyword="cloud-native" title="Filter by cloud-native">cloud-native</button><button class="badge keyword-button" type="button" data-filter-keyword="ebpf" title="Filter by ebpf">ebpf</button><button class="badge keyword-button" type="button" data-filter-keyword="kubernetes" title="Filter by kubernetes">kubernetes</button><button class="badge keyword-button" type="button" data-filter-keyword="log" title="Filter by log">log</button><button class="badge keyword-button" type="button" data-filter-keyword="sls" title="Filter by sls">sls</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.2k</span>
+      <span class="fork-count">⑂ 442</span>
+      <span class="commit-count">⟳ 1.4k</span>
+    </div>
+    <span class="last-updated">⏱ Jul 27, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1905" data-pushed="1785335849" data-name="xquic" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/xquic" target="_blank" rel="noreferrer">xquic</a></div><a class="repo-slug" href="https://github.com/alibaba/xquic" target="_blank" rel="noreferrer">alibaba/xquic</a></td>
+  <td><span class="tag tag-c">C</span></td>
+  <td class="description-cell">XQUIC Library released by Alibaba is a cross-platform implementation of QUIC and HTTP/3 protocol.<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Networking" title="Filter by Networking">Networking</button><button class="badge keyword-button" type="button" data-filter-keyword="http3" title="Filter by http3">http3</button><button class="badge keyword-button" type="button" data-filter-keyword="ietf" title="Filter by ietf">ietf</button><button class="badge keyword-button" type="button" data-filter-keyword="protocol" title="Filter by protocol">protocol</button><button class="badge keyword-button" type="button" data-filter-keyword="quic" title="Filter by quic">quic</button><button class="badge keyword-button" type="button" data-filter-keyword="tls13" title="Filter by tls13">tls13</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.9k</span>
+      <span class="fork-count">⑂ 398</span>
+      <span class="commit-count">⟳ 266</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1219" data-pushed="1785338562" data-name="photonlibos" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/PhotonLibOS" target="_blank" rel="noreferrer">PhotonLibOS</a></div><a class="repo-slug" href="https://github.com/alibaba/PhotonLibOS" target="_blank" rel="noreferrer">alibaba/PhotonLibOS</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">Probably the fastest coroutine lib in the world!<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="async-io" title="Filter by async-io">async-io</button><button class="badge keyword-button" type="button" data-filter-keyword="coroutine" title="Filter by coroutine">coroutine</button><button class="badge keyword-button" type="button" data-filter-keyword="cpp" title="Filter by cpp">cpp</button><button class="badge keyword-button" type="button" data-filter-keyword="fs-library" title="Filter by fs-library">fs-library</button><button class="badge keyword-button" type="button" data-filter-keyword="http" title="Filter by http">http</button><button class="badge keyword-button" type="button" data-filter-keyword="iouring" title="Filter by iouring">iouring</button><button class="badge keyword-button" type="button" data-filter-keyword="libos" title="Filter by libos">libos</button><button class="badge keyword-button" type="button" data-filter-keyword="net-library" title="Filter by net-library">net-library</button><button class="badge keyword-button" type="button" data-filter-keyword="rpc" title="Filter by rpc">rpc</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.2k</span>
+      <span class="fork-count">⑂ 178</span>
+      <span class="commit-count">⟳ 843</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="886" data-pushed="1784773947" data-name="loongsuite-go" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/loongsuite-go" target="_blank" rel="noreferrer">loongsuite-go</a></div><a class="repo-slug" href="https://github.com/alibaba/loongsuite-go" target="_blank" rel="noreferrer">alibaba/loongsuite-go</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">OpenTelemetry Compile-Time Instrumentation for Golang<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="apm" title="Filter by apm">apm</button><button class="badge keyword-button" type="button" data-filter-keyword="go" title="Filter by go">go</button><button class="badge keyword-button" type="button" data-filter-keyword="instrumentation" title="Filter by instrumentation">instrumentation</button><button class="badge keyword-button" type="button" data-filter-keyword="metrics" title="Filter by metrics">metrics</button><button class="badge keyword-button" type="button" data-filter-keyword="observability" title="Filter by observability">observability</button><button class="badge keyword-button" type="button" data-filter-keyword="opentelemetry" title="Filter by opentelemetry">opentelemetry</button><button class="badge keyword-button" type="button" data-filter-keyword="tracing" title="Filter by tracing">tracing</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 886</span>
+      <span class="fork-count">⑂ 120</span>
+      <span class="commit-count">⟳ 453</span>
+    </div>
+    <span class="last-updated">⏱ Jul 23, 2026</span>
+  </td>
+</tr>
+<tr data-stars="694" data-pushed="1784798501" data-name="kubeskoop" data-cluster="systems-networking-observability">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/kubeskoop" target="_blank" rel="noreferrer">kubeskoop</a></div><a class="repo-slug" href="https://github.com/alibaba/kubeskoop" target="_blank" rel="noreferrer">alibaba/kubeskoop</a></td>
+  <td><span class="tag tag-go">Go</span></td>
+  <td class="description-cell">Network monitoring &amp; diagnosis suite for Kubernetes<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Cloud" title="Filter by Cloud">Cloud</button><button class="badge keyword-button" type="button" data-filter-keyword="Networking" title="Filter by Networking">Networking</button><button class="badge keyword-button" type="button" data-filter-keyword="Observability" title="Filter by Observability">Observability</button><button class="badge keyword-button" type="button" data-filter-keyword="diagnosis" title="Filter by diagnosis">diagnosis</button><button class="badge keyword-button" type="button" data-filter-keyword="ebpf" title="Filter by ebpf">ebpf</button><button class="badge keyword-button" type="button" data-filter-keyword="kubernetes" title="Filter by kubernetes">kubernetes</button><button class="badge keyword-button" type="button" data-filter-keyword="monitoring" title="Filter by monitoring">monitoring</button><button class="badge keyword-button" type="button" data-filter-keyword="network" title="Filter by network">network</button><button class="badge keyword-button" type="button" data-filter-keyword="network-observability" title="Filter by network-observability">network-observability</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 694</span>
+      <span class="fork-count">⑂ 90</span>
+      <span class="commit-count">⟳ 477</span>
+    </div>
+    <span class="last-updated">⏱ Jul 23, 2026</span>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section class="repo-section" id="cluster-research-vision-media" data-section>
+  <div class="section-header">
+    <div>
+      <h2><span class="section-mark section-mark-orange"></span>Research, Vision &amp; Media</h2>
+      <p>Computer vision, video and audio generation, 3D, datasets, benchmarks, and applied research projects. Showing all qualifying repositories in this cluster by stars.</p>
+    </div>
+    <span class="count-pill">6 repos</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <colgroup>
+        <col class="col-repository">
+        <col class="col-language">
+        <col class="col-description">
+        <col class="col-github">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Language</th>
+          <th>Description</th>
+          <th>GitHub</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr data-stars="2128" data-pushed="1780452706" data-name="clusterdata" data-cluster="research-vision-media">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/clusterdata" target="_blank" rel="noreferrer">clusterdata</a></div><a class="repo-slug" href="https://github.com/alibaba/clusterdata" target="_blank" rel="noreferrer">alibaba/clusterdata</a></td>
+  <td><span class="tag tag-jupyter-notebook">Jupyter Notebook</span></td>
+  <td class="description-cell">cluster data collected from production clusters in Alibaba for cluster management research<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="dataset" title="Filter by dataset">dataset</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 2.1k</span>
+      <span class="fork-count">⑂ 473</span>
+      <span class="commit-count">⟳ 152</span>
+    </div>
+    <span class="last-updated">⏱ Jun 03, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1396" data-pushed="1778641933" data-name="logics-parsing" data-cluster="research-vision-media">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/Logics-Parsing" target="_blank" rel="noreferrer">Logics-Parsing</a></div><a class="repo-slug" href="https://github.com/alibaba/Logics-Parsing" target="_blank" rel="noreferrer">alibaba/Logics-Parsing</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">No description provided.<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.4k</span>
+      <span class="fork-count">⑂ 121</span>
+      <span class="commit-count">⟳ 54</span>
+    </div>
+    <span class="last-updated">⏱ May 13, 2026</span>
+  </td>
+</tr>
+<tr data-stars="1239" data-pushed="1785118921" data-name="tora" data-cluster="research-vision-media">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/Tora" target="_blank" rel="noreferrer">Tora</a></div><a class="repo-slug" href="https://github.com/alibaba/Tora" target="_blank" rel="noreferrer">alibaba/Tora</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">[CVPR&#x27;25]Tora: Trajectory-oriented Diffusion Transformer for Video Generation<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Vision" title="Filter by Vision">Vision</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 1.2k</span>
+      <span class="fork-count">⑂ 61</span>
+      <span class="commit-count">⟳ 33</span>
+    </div>
+    <span class="last-updated">⏱ Jul 27, 2026</span>
+  </td>
+</tr>
+<tr data-stars="946" data-pushed="1785309335" data-name="lumenx" data-cluster="research-vision-media">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/lumenx" target="_blank" rel="noreferrer">lumenx</a></div><a class="repo-slug" href="https://github.com/alibaba/lumenx" target="_blank" rel="noreferrer">alibaba/lumenx</a></td>
+  <td><span class="tag tag-ts">TypeScript</span></td>
+  <td class="description-cell">LumenX Studio，AI 短漫剧一站式生产平台。它能够将小说文本转化为动态视频，打通了从剧本分析、角色定制、分镜绘制到视频合成的完整创作链路。<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 946</span>
+      <span class="fork-count">⑂ 237</span>
+      <span class="commit-count">⟳ 391</span>
+    </div>
+    <span class="last-updated">⏱ Jul 29, 2026</span>
+  </td>
+</tr>
+<tr data-stars="483" data-pushed="1783402984" data-name="unified-audio" data-cluster="research-vision-media">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/unified-audio" target="_blank" rel="noreferrer">unified-audio</a></div><a class="repo-slug" href="https://github.com/alibaba/unified-audio" target="_blank" rel="noreferrer">alibaba/unified-audio</a></td>
+  <td><span class="tag tag-py">Python</span></td>
+  <td class="description-cell">An Open-Source Project to Unify Audio Processing and Generation<div class="topic-row"><button class="badge keyword-button" type="button" data-filter-keyword="Audio" title="Filter by Audio">Audio</button><button class="badge keyword-button" type="button" data-filter-keyword="audio-generation" title="Filter by audio-generation">audio-generation</button><button class="badge keyword-button" type="button" data-filter-keyword="audio-llm" title="Filter by audio-llm">audio-llm</button><button class="badge keyword-button" type="button" data-filter-keyword="audio-processing" title="Filter by audio-processing">audio-processing</button><button class="badge keyword-button" type="button" data-filter-keyword="audio-restoration" title="Filter by audio-restoration">audio-restoration</button><button class="badge keyword-button" type="button" data-filter-keyword="audio-tokenizer" title="Filter by audio-tokenizer">audio-tokenizer</button><button class="badge keyword-button" type="button" data-filter-keyword="codec" title="Filter by codec">codec</button><button class="badge keyword-button" type="button" data-filter-keyword="text-to-audio" title="Filter by text-to-audio">text-to-audio</button><button class="badge keyword-button" type="button" data-filter-keyword="voice-conversion" title="Filter by voice-conversion">voice-conversion</button></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 483</span>
+      <span class="fork-count">⑂ 40</span>
+      <span class="commit-count">⟳ 92</span>
+    </div>
+    <span class="last-updated">⏱ Jul 07, 2026</span>
+  </td>
+</tr>
+<tr data-stars="242" data-pushed="1785137019" data-name="taobao3d" data-cluster="research-vision-media">
+  <td><div class="repo-name"><img src="https://github.com/alibaba.png?size=32" alt="" class="avatar"><a href="https://github.com/alibaba/Taobao3D" target="_blank" rel="noreferrer">Taobao3D</a></div><a class="repo-slug" href="https://github.com/alibaba/Taobao3D" target="_blank" rel="noreferrer">alibaba/Taobao3D</a></td>
+  <td><span class="tag tag-cpp">C++</span></td>
+  <td class="description-cell">No description provided.<div class="topic-row"></div></td>
+  <td class="github-cell">
+    <div class="gh-stats">
+      <span class="star-count">★ 242</span>
+      <span class="fork-count">⑂ 11</span>
+      <span class="commit-count">⟳ 16</span>
+    </div>
+    <span class="last-updated">⏱ Jul 27, 2026</span>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+  <footer class="footer">
+    <p style="margin-bottom: 10px;">Useful links:
+      <a class="gh-link" href="https://www.alibabacloud.com/opensource" target="_blank" rel="noreferrer" style="display: inline; margin-left: 6px;">Alibaba Open Source</a>
+      <span style="margin: 0 4px;">·</span>
+      <a class="gh-link" href="https://damo.alibaba.com/" target="_blank" rel="noreferrer" style="display: inline;">Alibaba DAMO Academy</a>
+      <span style="margin: 0 4px;">·</span>
+      <a class="gh-link" href="https://www.alibabacloud.com/developer" target="_blank" rel="noreferrer" style="display: inline;">Alibaba Cloud Developers</a>
+    </p>
+    <p style="text-align: center;">Generated from the GitHub API · Last updated: <span id="last-updated-date">2026-07-30 00:57 UTC</span></p>
+  </footer>
+
+<script>
+  const searchInput = document.getElementById('global-table-search');
+  const clearButton = document.getElementById('global-search-clear');
+  const sortStars = document.getElementById('sort-stars');
+  const sortFresh = document.getElementById('sort-fresh');
+
+  function allRows() {
+    return Array.from(document.querySelectorAll('tbody tr'));
+  }
+
+  function applySearch() {
+    const query = searchInput.value.trim().toLowerCase();
+    let visibleRows = 0;
+    document.querySelectorAll('[data-section]').forEach(section => {
+      let sectionVisible = false;
+      section.querySelectorAll('tbody tr').forEach(row => {
+        const match = !query || row.textContent.toLowerCase().includes(query);
+        row.classList.toggle('hidden', !match);
+        if (match) {
+          sectionVisible = true;
+          visibleRows += 1;
+        }
+      });
+      section.classList.toggle('hidden', !sectionVisible);
+    });
+    clearButton.disabled = !query;
+    if (query && visibleRows === 0) {
+      document.querySelectorAll('[data-section], tbody tr').forEach(el => el.classList.remove('hidden'));
+    }
+  }
+
+  function sortTables(kind) {
+    const attr = kind === 'fresh' ? 'pushed' : 'stars';
+    document.querySelectorAll('tbody').forEach(tbody => {
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.sort((a, b) => Number(b.dataset[attr] || 0) - Number(a.dataset[attr] || 0));
+      rows.forEach(row => tbody.appendChild(row));
+    });
+    sortStars.classList.toggle('active', kind === 'stars');
+    sortFresh.classList.toggle('active', kind === 'fresh');
+    applySearch();
+  }
+
+  searchInput.addEventListener('input', applySearch);
+  clearButton.addEventListener('click', () => {
+    searchInput.value = '';
+    applySearch();
+    searchInput.focus();
+  });
+  document.addEventListener('click', event => {
+    const keyword = event.target.closest('[data-filter-keyword]');
+    if (!keyword) return;
+    const value = keyword.dataset.filterKeyword || keyword.textContent.trim();
+    searchInput.value = searchInput.value.trim().toLowerCase() === value.trim().toLowerCase() ? '' : value;
+    applySearch();
+    searchInput.focus({ preventScroll: true });
+  });
+  sortStars.addEventListener('click', () => sortTables('stars'));
+  sortFresh.addEventListener('click', () => sortTables('fresh'));
+  sortTables('fresh');
+</script>
+</body>
+</html>

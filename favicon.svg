@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Alibaba repository atlas">
+  <rect width="64" height="64" rx="14" fill="#07101a"/>
+  <path d="M15 20h11v5h-6v14h6v5H15zM49 20H38v5h6v14h-6v5h11z" fill="#ff6a00"/>
+  <path d="M23 30h18v4H23z" fill="#ff9a3d"/>
+  <circle cx="32" cy="32" r="5" fill="#fff"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#26384d" stroke-width="2"/>
+</svg>

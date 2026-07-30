@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "alibaba-repos-proxy",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-30",
+  "routes": [
+    {
+      "pattern": "glaubi.net/alibaba*",
+      "zone_name": "glaubi.net"
+    }
+  ]
+}
