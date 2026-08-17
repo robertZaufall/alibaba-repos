@@ -60,6 +60,7 @@ AUTO_KEYWORD_TERMS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Vision", ("computer vision", "video generation", "3d")),
     ("Audio", ("audio", "speech", "music")),
     ("Benchmark", ("benchmark", "evaluation")),
+    ("Document AI", ("resume", "document parsing", "layout-aware", "ocr")),
 )
 SUBSTRING_KEYWORDS: set[str] = set()
 
@@ -546,6 +547,7 @@ def cluster_repo(repo: dict[str, Any]) -> Cluster:
         "clusterdata": "research-vision-media",
         "logics-parsing": "research-vision-media",
         "lumenx": "research-vision-media",
+        "smartresume": "research-vision-media",
         "taobao3d": "research-vision-media",
         "tora": "research-vision-media",
         "unified-audio": "research-vision-media",
