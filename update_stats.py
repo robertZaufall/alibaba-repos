@@ -495,6 +495,7 @@ def cluster_repo(repo: dict[str, Any]) -> Cluster:
         ]
     ).lower()
     name_overrides = {
+        "aacr-bench": "ai-agents-ml",
         "anolisa": "ai-agents-ml",
         "mnn": "ai-agents-ml",
         "open-code-review": "ai-agents-ml",
