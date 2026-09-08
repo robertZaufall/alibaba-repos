@@ -524,6 +524,7 @@ def cluster_repo(repo: dict[str, Any]) -> Cluster:
         "sentinel-golang": "cloud-microservices-middleware",
         "spring-cloud-alibaba": "cloud-microservices-middleware",
         "smartengine": "cloud-microservices-middleware",
+        "compileflow": "cloud-microservices-middleware",
         "arthas": "languages-libraries-tools",
         "async_simple": "languages-libraries-tools",
         "bytekit": "languages-libraries-tools",
