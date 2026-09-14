@@ -13031,12 +13031,12 @@
         "alibaba/COLA": {
           "forks": 3234,
           "pushed_at": "2026-08-31T09:36:38Z",
-          "stars": 13021
+          "stars": 13022
         },
         "alibaba/DataX": {
           "forks": 5655,
           "pushed_at": "2026-07-07T08:41:05Z",
-          "stars": 17352
+          "stars": 17353
         },
         "alibaba/GraphScope": {
           "forks": 468,
@@ -13044,9 +13044,9 @@
           "stars": 3557
         },
         "alibaba/MNN": {
-          "forks": 2439,
-          "pushed_at": "2026-09-11T09:41:45Z",
-          "stars": 16081
+          "forks": 2440,
+          "pushed_at": "2026-09-14T08:40:50Z",
+          "stars": 16082
         },
         "alibaba/MongoShake": {
           "forks": 466,
@@ -13055,13 +13055,13 @@
         },
         "alibaba/PhotonLibOS": {
           "forks": 179,
-          "pushed_at": "2026-09-14T06:31:52Z",
+          "pushed_at": "2026-09-14T09:41:19Z",
           "stars": 1232
         },
         "alibaba/QLExpress": {
           "forks": 1214,
           "pushed_at": "2026-08-15T14:00:11Z",
-          "stars": 5624
+          "stars": 5625
         },
         "alibaba/ROCK": {
           "forks": 81,
@@ -13071,7 +13071,7 @@
         "alibaba/ROLL": {
           "forks": 312,
           "pushed_at": "2026-09-14T01:34:22Z",
-          "stars": 3395
+          "stars": 3396
         },
         "alibaba/RecIS": {
           "forks": 25,
@@ -13095,13 +13095,13 @@
         },
         "alibaba/TorchEasyRec": {
           "forks": 80,
-          "pushed_at": "2026-09-09T15:02:59Z",
+          "pushed_at": "2026-09-14T10:55:34Z",
           "stars": 441
         },
         "alibaba/UnifiedModel": {
           "forks": 60,
           "pushed_at": "2026-09-02T23:04:43Z",
-          "stars": 379
+          "stars": 383
         },
         "alibaba/aacr-bench": {
           "forks": 24,
@@ -13116,7 +13116,7 @@
         "alibaba/arthas": {
           "forks": 7646,
           "pushed_at": "2026-09-08T07:19:20Z",
-          "stars": 37533
+          "stars": 37536
         },
         "alibaba/async_simple": {
           "forks": 316,
@@ -13126,7 +13126,7 @@
         "alibaba/canal": {
           "forks": 7630,
           "pushed_at": "2026-07-30T07:40:52Z",
-          "stars": 29731
+          "stars": 29732
         },
         "alibaba/canvas-ui": {
           "forks": 24,
@@ -13144,19 +13144,19 @@
           "stars": 1984
         },
         "alibaba/druid": {
-          "forks": 8559,
+          "forks": 8557,
           "pushed_at": "2026-08-01T11:32:54Z",
           "stars": 28175
         },
         "alibaba/fastjson2": {
           "forks": 613,
           "pushed_at": "2026-09-09T22:59:49Z",
-          "stars": 4408
+          "stars": 4409
         },
         "alibaba/hooks": {
-          "forks": 2767,
+          "forks": 2766,
           "pushed_at": "2026-09-06T02:03:14Z",
-          "stars": 14972
+          "stars": 14973
         },
         "alibaba/java-dns-cache-manipulator": {
           "forks": 192,
@@ -13185,7 +13185,7 @@
         },
         "alibaba/loongcollector": {
           "forks": 451,
-          "pushed_at": "2026-09-04T05:54:38Z",
+          "pushed_at": "2026-09-14T10:54:13Z",
           "stars": 2192
         },
         "alibaba/loongsuite-go": {
@@ -13194,24 +13194,24 @@
           "stars": 904
         },
         "alibaba/lumenx": {
-          "forks": 299,
+          "forks": 300,
           "pushed_at": "2026-08-11T07:00:33Z",
-          "stars": 1275
+          "stars": 1276
         },
         "alibaba/nacos": {
-          "forks": 13291,
-          "pushed_at": "2026-09-10T12:29:11Z",
-          "stars": 33361
+          "forks": 13292,
+          "pushed_at": "2026-09-14T09:12:27Z",
+          "stars": 33364
         },
         "alibaba/open-code-review": {
-          "forks": 1763,
-          "pushed_at": "2026-09-14T05:55:49Z",
-          "stars": 23850
+          "forks": 1791,
+          "pushed_at": "2026-09-14T11:30:14Z",
+          "stars": 24389
         },
         "alibaba/page-agent": {
           "forks": 2597,
           "pushed_at": "2026-09-10T18:15:38Z",
-          "stars": 29065
+          "stars": 29066
         },
         "alibaba/pipcook": {
           "forks": 210,
@@ -13225,8 +13225,8 @@
         },
         "alibaba/rtp-llm": {
           "forks": 275,
-          "pushed_at": "2026-09-14T06:33:08Z",
-          "stars": 1333
+          "pushed_at": "2026-09-14T11:54:47Z",
+          "stars": 1334
         },
         "alibaba/sentinel-golang": {
           "forks": 456,
@@ -13235,28 +13235,28 @@
         },
         "alibaba/skill-up": {
           "forks": 68,
-          "pushed_at": "2026-09-14T01:47:19Z",
-          "stars": 892
+          "pushed_at": "2026-09-14T08:00:07Z",
+          "stars": 894
         },
         "alibaba/spring-ai-alibaba": {
           "forks": 2408,
           "pushed_at": "2026-08-25T15:40:28Z",
-          "stars": 10849
+          "stars": 10855
         },
         "alibaba/spring-cloud-alibaba": {
-          "forks": 8481,
+          "forks": 8480,
           "pushed_at": "2026-09-09T08:24:37Z",
           "stars": 29169
         },
         "alibaba/tair-kvcache": {
           "forks": 58,
-          "pushed_at": "2026-09-14T06:29:37Z",
+          "pushed_at": "2026-09-14T11:12:52Z",
           "stars": 253
         },
         "alibaba/tengine": {
           "forks": 2503,
           "pushed_at": "2026-09-07T02:39:23Z",
-          "stars": 13360
+          "stars": 13362
         },
         "alibaba/transmittable-thread-local": {
           "forks": 1723,
@@ -13266,11 +13266,11 @@
         "alibaba/unified-audio": {
           "forks": 45,
           "pushed_at": "2026-07-07T05:43:04Z",
-          "stars": 526
+          "stars": 528
         },
         "alibaba/xquic": {
           "forks": 404,
-          "pushed_at": "2026-09-14T06:24:18Z",
+          "pushed_at": "2026-09-14T10:51:10Z",
           "stars": 1918
         },
         "alibaba/yalantinglibs": {
@@ -13280,8 +13280,8 @@
         },
         "alibaba/zvec": {
           "forks": 998,
-          "pushed_at": "2026-09-14T06:05:32Z",
-          "stars": 15914
+          "pushed_at": "2026-09-14T11:47:51Z",
+          "stars": 15916
         }
       }
     }
