@@ -40,9 +40,8 @@ MIN_STARS = 201
 # Repos that qualify by catalog rules (org-owned, stars, push window) but are
 # missing from GitHub search for the combined org+stars+pushed query. Fetched
 # via GET /repos/{org}/{name}; ownership is re-checked so transfers are skipped.
-SEARCH_INDEX_SUPPLEMENT: tuple[str, ...] = (
-    "innodb-java-reader",
-)
+# innodb-java-reader was listed here until 2026-10-06, when search indexed it again.
+SEARCH_INDEX_SUPPLEMENT: tuple[str, ...] = ()
 TOP_PER_CLUSTER = 0
 TRACTION_DAYS = 30
 HISTORY_DAYS = 140
@@ -578,6 +577,7 @@ def cluster_repo(repo: dict[str, Any]) -> Cluster:
         "bytekit": "languages-libraries-tools",
         "f2e-spec": "languages-libraries-tools",
         "java-dns-cache-manipulator": "languages-libraries-tools",
+        "jvm-sandbox": "languages-libraries-tools",
         "qlexpress": "languages-libraries-tools",
         "transmittable-thread-local": "languages-libraries-tools",
         "yalantinglibs": "languages-libraries-tools",
