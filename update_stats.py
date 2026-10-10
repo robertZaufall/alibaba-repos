@@ -591,6 +591,8 @@ def cluster_repo(repo: dict[str, Any]) -> Cluster:
         "kubeskoop": "systems-networking-observability",
         "loongcollector": "systems-networking-observability",
         "loongsuite-go": "systems-networking-observability",
+        # Evidence 2026-10-10: OpenTelemetry telemetry collector for AI coding agents (topics observability/otel/llm-observability; siblings loongcollector/loongsuite-go); "agent"/"llm" pulled it to ai-agents-ml
+        "loongsuite-pilot": "systems-networking-observability",
         "photonlibos": "systems-networking-observability",
         "tengine": "systems-networking-observability",
         "xquic": "systems-networking-observability",
