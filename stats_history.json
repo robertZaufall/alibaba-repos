@@ -30964,6 +30964,261 @@
           "stars": 16275
         }
       }
+    },
+    {
+      "date": "2026-11-22",
+      "repos": {
+        "alibaba/ARouter": {
+          "forks": 2597,
+          "pushed_at": "2026-11-01T14:57:37Z",
+          "stars": 14447
+        },
+        "alibaba/AliSQL": {
+          "forks": 905,
+          "pushed_at": "2026-10-16T08:00:17Z",
+          "stars": 5992
+        },
+        "alibaba/COLA": {
+          "forks": 3232,
+          "pushed_at": "2026-08-31T09:36:38Z",
+          "stars": 13088
+        },
+        "alibaba/ChatUI": {
+          "forks": 426,
+          "pushed_at": "2026-10-12T03:21:55Z",
+          "stars": 4465
+        },
+        "alibaba/DataX": {
+          "forks": 5656,
+          "pushed_at": "2026-11-15T07:22:22Z",
+          "stars": 17395
+        },
+        "alibaba/GraphScope": {
+          "forks": 472,
+          "pushed_at": "2026-09-23T06:33:33Z",
+          "stars": 3563
+        },
+        "alibaba/Logics-Parsing": {
+          "forks": 123,
+          "pushed_at": "2026-09-21T08:50:53Z",
+          "stars": 1464
+        },
+        "alibaba/MNN": {
+          "forks": 2545,
+          "pushed_at": "2026-11-20T15:03:08Z",
+          "stars": 16590
+        },
+        "alibaba/MongoShake": {
+          "forks": 470,
+          "pushed_at": "2026-11-19T06:54:33Z",
+          "stars": 1824
+        },
+        "alibaba/PhotonLibOS": {
+          "forks": 183,
+          "pushed_at": "2026-11-20T02:42:05Z",
+          "stars": 1240
+        },
+        "alibaba/QLExpress": {
+          "forks": 1212,
+          "pushed_at": "2026-11-07T12:39:28Z",
+          "stars": 5652
+        },
+        "alibaba/ROCK": {
+          "forks": 85,
+          "pushed_at": "2026-11-22T01:08:56Z",
+          "stars": 500
+        },
+        "alibaba/ROLL": {
+          "forks": 330,
+          "pushed_at": "2026-11-22T01:12:58Z",
+          "stars": 3456
+        },
+        "alibaba/RecIS": {
+          "forks": 26,
+          "pushed_at": "2026-09-23T02:42:53Z",
+          "stars": 366
+        },
+        "alibaba/Taobao3D": {
+          "forks": 14,
+          "pushed_at": "2026-11-06T14:48:00Z",
+          "stars": 282
+        },
+        "alibaba/TorchEasyRec": {
+          "forks": 89,
+          "pushed_at": "2026-11-22T05:01:30Z",
+          "stars": 492
+        },
+        "alibaba/UnifiedModel": {
+          "forks": 71,
+          "pushed_at": "2026-11-09T02:42:25Z",
+          "stars": 466
+        },
+        "alibaba/aacr-bench": {
+          "forks": 35,
+          "pushed_at": "2026-11-16T12:36:19Z",
+          "stars": 267
+        },
+        "alibaba/alibaba.alicloud": {
+          "forks": 88,
+          "pushed_at": "2026-08-24T11:34:51Z",
+          "stars": 229
+        },
+        "alibaba/arthas": {
+          "forks": 7643,
+          "pushed_at": "2026-11-21T08:10:12Z",
+          "stars": 37622
+        },
+        "alibaba/async_simple": {
+          "forks": 318,
+          "pushed_at": "2026-11-03T01:28:58Z",
+          "stars": 2214
+        },
+        "alibaba/atrex-kernel-agent": {
+          "forks": 41,
+          "pushed_at": "2026-11-22T03:07:35Z",
+          "stars": 217
+        },
+        "alibaba/clusterdata": {
+          "forks": 491,
+          "pushed_at": "2026-10-13T09:47:22Z",
+          "stars": 2270
+        },
+        "alibaba/compileflow": {
+          "forks": 288,
+          "pushed_at": "2026-11-13T16:16:28Z",
+          "stars": 1988
+        },
+        "alibaba/fastjson2": {
+          "forks": 631,
+          "pushed_at": "2026-11-15T10:38:28Z",
+          "stars": 4433
+        },
+        "alibaba/hooks": {
+          "forks": 2758,
+          "pushed_at": "2026-11-22T03:58:31Z",
+          "stars": 14984
+        },
+        "alibaba/innodb-java-reader": {
+          "forks": 123,
+          "pushed_at": "2026-09-24T19:24:11Z",
+          "stars": 495
+        },
+        "alibaba/java-dns-cache-manipulator": {
+          "forks": 194,
+          "pushed_at": "2026-08-27T10:03:17Z",
+          "stars": 966
+        },
+        "alibaba/jetcache": {
+          "forks": 1086,
+          "pushed_at": "2026-10-24T07:31:40Z",
+          "stars": 5608
+        },
+        "alibaba/jvm-sandbox": {
+          "forks": 1587,
+          "pushed_at": "2026-09-09T04:22:24Z",
+          "stars": 6954
+        },
+        "alibaba/kubeskoop": {
+          "forks": 91,
+          "pushed_at": "2026-11-20T08:20:44Z",
+          "stars": 704
+        },
+        "alibaba/loongcollector": {
+          "forks": 458,
+          "pushed_at": "2026-11-05T08:15:26Z",
+          "stars": 2218
+        },
+        "alibaba/loongsuite-go": {
+          "forks": 130,
+          "pushed_at": "2026-10-19T02:04:08Z",
+          "stars": 907
+        },
+        "alibaba/loongsuite-pilot": {
+          "forks": 67,
+          "pushed_at": "2026-11-21T03:45:59Z",
+          "stars": 265
+        },
+        "alibaba/lumenx": {
+          "forks": 342,
+          "pushed_at": "2026-10-29T20:28:59Z",
+          "stars": 1502
+        },
+        "alibaba/nacos": {
+          "forks": 13292,
+          "pushed_at": "2026-11-20T02:13:53Z",
+          "stars": 33532
+        },
+        "alibaba/open-code-review": {
+          "forks": 4574,
+          "pushed_at": "2026-11-22T04:47:12Z",
+          "stars": 55175
+        },
+        "alibaba/page-agent": {
+          "forks": 2655,
+          "pushed_at": "2026-11-18T12:13:03Z",
+          "stars": 29733
+        },
+        "alibaba/pipcook": {
+          "forks": 211,
+          "pushed_at": "2026-11-22T00:24:06Z",
+          "stars": 2589
+        },
+        "alibaba/qz-browser-agent": {
+          "forks": 34,
+          "pushed_at": "2026-11-14T14:25:00Z",
+          "stars": 228
+        },
+        "alibaba/react-intl-universal": {
+          "forks": 157,
+          "pushed_at": "2026-11-20T23:50:38Z",
+          "stars": 1354
+        },
+        "alibaba/rtp-llm": {
+          "forks": 309,
+          "pushed_at": "2026-11-22T05:59:57Z",
+          "stars": 1402
+        },
+        "alibaba/skill-up": {
+          "forks": 134,
+          "pushed_at": "2026-11-20T02:05:34Z",
+          "stars": 1510
+        },
+        "alibaba/spring-ai-alibaba": {
+          "forks": 2479,
+          "pushed_at": "2026-10-07T13:48:56Z",
+          "stars": 11166
+        },
+        "alibaba/spring-cloud-alibaba": {
+          "forks": 8465,
+          "pushed_at": "2026-11-14T05:46:57Z",
+          "stars": 29155
+        },
+        "alibaba/tair-kvcache": {
+          "forks": 69,
+          "pushed_at": "2026-11-22T04:58:54Z",
+          "stars": 284
+        },
+        "alibaba/tengine": {
+          "forks": 2507,
+          "pushed_at": "2026-11-20T14:12:27Z",
+          "stars": 13432
+        },
+        "alibaba/xquic": {
+          "forks": 414,
+          "pushed_at": "2026-11-20T10:59:25Z",
+          "stars": 1935
+        },
+        "alibaba/yalantinglibs": {
+          "forks": 335,
+          "pushed_at": "2026-11-05T00:57:07Z",
+          "stars": 2189
+        },
+        "alibaba/zvec": {
+          "forks": 1028,
+          "pushed_at": "2026-11-22T04:19:53Z",
+          "stars": 16272
+        }
+      }
     }
   ]
 }
